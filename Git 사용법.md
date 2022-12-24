@@ -35,3 +35,8 @@ Git Bash : 리눅스 기반 터미널. 리눅스, 맥과 같은 운영체제의 
  * Download ZIP : Github에서 지원하는 다운로드 기능. 원격저장소 주소와 버전정보가 제외된다.
  * git clone [Github 주소] . : 해당 Github 페이지에 저장소를 내려받는다. 주소 이후 한칸 공백 후 '.'은 현재 위치에 내려받으라는 것. 미작성 시 해당 저장소 이름으로 폴더가 생성된다.
  * git pull origin master : 원격저장소의 커밋을 로컬저장소에 내려받는다.
+
+
+## Using GUI sourcetree
+* [Sourcetree-Atlassian] (https://www.sourcetreeapp.com/)
+* 
