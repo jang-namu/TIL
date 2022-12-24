@@ -2,11 +2,11 @@
 
 Git Bash : 리눅스 기반 터미널. 리눅스, 맥과 같은 운영체제의 터미널과 같은 명령어로 git을 관리할 수 있게 해준다.
 .git : 최초 'git init' 실행 시 자동 생성되는 파일로 git으로 생성한 버전들의 정보와 원격저장소의 주소 등을 저장한다. 로컬저장소라고 부른다.
-commit : git을 통해 생성된 각각의 버전.
+커밋(commit) : git을 통해 생성된 각각의 버전.
 
 
 ## Setting
-* git init : 현재 폴더를 git 로컬저장소로 만든다 or 초기화시킨다.
+* git init : 현재 폴더를 git 로컬저장소(Local repository)로 만든다 or 초기화시킨다.
 * commit을 생성하기 전에, 먼저 사용자 정보를 등록해야 한다. (각 버전의 생성자를 명시)
   * git config --global user.email "example@email.com"
   * git config --global user.name "exampleName"
@@ -23,6 +23,13 @@ commit : git을 통해 생성된 각각의 버전.
 
 
 ## Using with Github
-로컬저장소에 commit을 원격저장소(repository)에 올리기 위해선, 먼저 로컬저장소에 원격저장소 주소를 알려야한다.
-* git remote add origin "https://github.com/username/example" : Github 등에서 생성한 원격저장소의 주소를 로컬저장소에 알린다.
-* git push origin master : 로컬저장소의 commit을 repository에 올린다.
+* Local to Remote repository
+ * 로컬저장소에 commit을 원격저장소(Remote repository)에 올리기 위해선, 먼저 로컬저장소에 원격저장소 주소를 알려야한다.
+ * git remote add origin "https://github.com/username/example" : Github 등에서 생성한 원격저장소의 주소를 로컬저장소에 알린다.
+ * git push origin master : 로컬저장소의 commit을 원격저장소에 올린다.
+
+* Remote to Local repository
+ * 클론(Clone) : 원격저장소의 코드와 버전 전체를 내 컴퓨터로 내려받는 것. 최시 버전뿐 아니라 이전 버전들과 원격저장소의 주소 등이 내 컴퓨터에 로컬저장소에 저장된다.
+ * 원격저장소의 정보를 클론해오고 싶을 경우, 먼저 내려받을 위치(로컬저장소)를 지정해줘야 한다. 
+ * Download ZIP : Github에서 지원하는 다운로드 기능. 원격저장소 주소와 버전정보가 제외된다.
+ * git clone [Github 주소] . : 해당 Github 페이지에 저장소를 내려받는다. 주소 이후 한칸 공백 후 '.'은 현재 위치에 내려받으라는 것. 미작성 시 해당 저장소 이름으로 폴더가 생성된다.
