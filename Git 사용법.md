@@ -39,4 +39,18 @@ Git Bash : 리눅스 기반 터미널. 리눅스, 맥과 같은 운영체제의 
 
 ## Using GUI sourcetree
 * [Sourcetree-Atlassian] (https://www.sourcetreeapp.com/)
-* 
+sourcetree는 git을 이용한 프로젝트 관리를 GUI환경, 다시말해 클리과 화면조작으로 가능하게 만듭니다.
+sourcetree는 직관적이며, 아름답기 때문에 많은 개발자들이 사용합니다.
+sourcetree를 이용하면 commit을 그래프로 확인하고, 생소한 명령어 대신 누구나 쉽게 프로젝트 관리가 가능합니다.
+
+* Get Remote Repository
+  * Github의 아이디로 로그인하면 원격저장소가 자동으로 sourcetree에 올라옵니다.
+  * Clone을 선택하여 원격저장소에 있는 프로젝트를 로컬에 내려받을 수 있습니다.
+* Get Local Repository
+  * 로컬저장소는 자동으로 추가되지 않아 수동으로 추가해줘야 합니다.
+  * Add 기능을 이용하여 직관적으로 경로를 추가할 수 있습니다.
+  * Create 기능은 내 컴퓨터에 새로운 로컬저장소를 생성합니다. 이것은 Git Bash에서 'git init' 명령을 수행한 것과 같은 의미를 갖습니다.
+
+* about Local repository
+  * sourcetree는 커밋을 그래프로 보여줍니다. 이는 .git 폴더에 저장된 정보를 사용합니다.
+  * .git 폴더는 최초 'git init' 초기화 시, 생성되며 git은 .git폴더에 버전 관리한 데이터와 이를 올릴 원격저장소의 주소 등을 저장합니다.
