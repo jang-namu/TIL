@@ -21,12 +21,41 @@
 * 대표적인 순환 알고리즘
     * 순환이 반복보다 빠른 대표적인 예로, 거듭제곱값 계산이 있다. 순환은 O(log(n)), 반복은 O(n)으로 순환이 더 빠르다.
     * 피보나치의 경우 순환을 사용하면 자연스러운 알고리즘 작성이 가능하지만, 속도가 매우 느려지는 대표적인 예이다.
-* 반복적인 형태로 바꾸기 어려운 순환
-    1. return n* factorial(n-1);
-    2. return factorial(n-1) *n;
-    * 1과 같이 순환 호출이 순환 함수의 맨 끝에서 이루어지는 것을 꼬리 순환이라고 한다. 이는 쉽게 반복으로 변환이 가능하다.
-    * 2와 같은 머리순환의 경우나 하노이탑 문제처럼 여러 군데에서 자기 자신을 호출하는 경우는 쉽게 반복으로 바꿀 수 없다.
-    * 따라서 동일한 알고리즘을 머리순환과 꼬리순환 모두로 작성할 수 있다면 당연히 꼬리 순환으로 작성해야 한다.
+
+- - -
+    * 반복적인 형태로 바꾸기 어려운 순환
+     1. return n* factorial(n-1);
+     2. return factorial(n-1) *n;
+     * 1과 같이 순환 호출이 순환 함수의 맨 끝에서 이루어지는 것을 꼬리 순환이라고 한다. 이는 쉽게 반복으로 변환이 가능하다.
+     * 2와 같은 머리순환의 경우나 하노이탑 문제처럼 여러 군데에서 자기 자신을 호출하는 경우는 쉽게 반복으로 바꿀 수 없다.
+     * 따라서 동일한 알고리즘을 머리순환과 꼬리순환 모두로 작성할 수 있다면 당연히 꼬리 순환으로 작성해야 한다.
+- - -
+* 책에 설명에 오류가있어, 위 내용을 수정한다.
+* [What is tail recursion?](https://stackoverflow.com/questions/33923/what-is-tail-recursion?newreg=9204514db4b647e2a3f00c669ebd6e2d)
+* Head recursion은 위에 1, 2의 경우를 모두 포함한다. 즉, Head recursion은 순환호출이 일어나면서 시스템 스택에 함수가 종료되지 않고 쌓인 후, 하나 씩 해결되며 종료된다.
+* Tail recursion의 경우, 함수가 순환호출을 할 때 자기가 맡은 일을 끝내고 다음 함수를 호출한다. return에 더 이상의 계산식이 없이 함수호출 부분만이 존재한다.
+
+    * Head Recursion
+    ```
+    function recsum(x) {
+        if (x === 0) {
+            return 0;
+        } else {
+         return x + recsum(x - 1);
+        }
+    }
+    ```
+
+    * Tail Recursion
+    ```
+    function tailrecsum(x, running_total = 0) {
+     if (x === 0) {
+         return running_total;
+     } else {
+         return tailrecsum(x - 1, running_total + x);
+     }
+    }
+    ```
 
 ## 3. 배열, 구조체, 포인터
 * 배열(array)
