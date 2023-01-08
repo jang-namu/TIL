@@ -71,16 +71,20 @@
 
 * 구조체(structure)
 * 타입이 다른 데이터를 묶는 방법, 일반적으로 struct 키워드 이용
-    1. struct 구조체태그 {
-    2.      항목1; 
-    3.      항목2;
-    4. };    
+    ```
+    struct 구조체태그 {
+         항목1; 
+         항목2;
+    }; 
+    ```   
 * typedef 구조체 정의
     * 아래 예에서는 student가 새로운 데이터 타입의 이름이 된다.
-        1. typedef struct studentTag {
-        2.      char name[10];
-        3.      int age;
-        4. } studnet;
+        ```
+        typedef struct studentTag {
+             char name[10];
+             int age;
+        } studnet;
+        ```
     * 구조체는 중괄호를 사용하여 선언 시에 초기화 할 수 있다.
         1. student s = { "Jang", 23 };
 
