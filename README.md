@@ -11,9 +11,8 @@
   * [c언어로 풀어쓴 자료구조](https://github.com/jang-namu/TIL/blob/main/CS/DataStructure.md)
 * 알고리즘
   * [알고리즘 트레이닝](https://github.com/jang-namu/TIL/blob/main/CS/Algorithm.md)
-* 웹, Web
-  * Http
-    * [Http 완벽 가이드](https://github.com/jang-namu/TIL/blob/main/CS/Web.md)
+* Http
+  * [Http 완벽 가이드](https://github.com/jang-namu/TIL/blob/main/CS/Web.md)
 
 ## 언어
 * [Python](https://github.com/jang-namu/TIL/blob/main/%ED%8C%8C%EC%9D%B4%EC%8D%AC.md)
