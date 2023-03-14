@@ -451,4 +451,129 @@
             * 운영체제가 원형 연결 리스트에 있는 프로그램 실행을 위해 고정된 시간 슬롯을 제공한다.
         2. 원형 큐의 구현
             * front와 rear 두 개의 포인터를 갖는 원형 연결 리스트로 크기가 자유자재인 원형 큐를 구현할 수 있다.
-    
+
+* 이중 연결 리스트(Double linked list)
+    * 단순, 원형 연결 리스트는 선행 노드를 찾기가 어렵다.
+    * 이중 연결 리스트는 이런 단점을 극복하고자, llink, rlink 각각 선행, 후속 노드에 대한 정보를 갖는다.
+    * 대개, 이중 연결 리스트와 원형 연결 리스트를 합친 형태를 많이 사용한며, 헤드 노드(head node)라는 특별한 노드를 추가한 형태이다.
+    * 헤드 노드는 데이터를 가지고 있지 않고 처음과 끝 노드를 가리킨다. 이는 삽입과 삭제 알고리즘을 간편하게 만드는 트릭이다.
+    * 이중 연결 리스트에서 포인터 p가 임의의 노드라고 할 때, p = p->llink->rlink = p->rlink->llink의 관계가 항상 성립한다.
+    * 헤드 노드는 포인터 변수가 아닌, 구조체 변수이다. 이중 연결 리스트를 사용하기 전에 반드시 초기화 해야 한다.
+    * 구현
+        '''
+            typedef int element;
+            typedef struct DListNode {  // 이중 연결 노드 타입
+                element data;
+                struct DListNode *llink;
+                struct DListNode *rlink;
+            } DListNode;
+        '''
+    * 연산
+        1. 삽입 연산
+            '''
+                void dinsert(DListNode *before, element data) {
+                    DListNode *newnode = (DListNode *)malloc(sizeof(DListNode));
+                    newnode->data = data;
+                    newnode->llink = before;
+                    newnode->rlink = before->rlink;
+                    before->rlink->llink = newnode;
+                    before->rlink = newnode;
+                }
+            '''
+        2. 삭제 연산
+            '''
+                void ddelete(DListNode *head, DListNode *removed) {
+                    if (head == removed) return;
+                    removed->llink->rlink = removed->rlink;
+                    removed->rlink->llink = removed->llink;
+                    free(removed);
+                }
+            '''
+
+* 연결된 스택(linked stack)
+    * 스택을 연결 리스트로 구현하면 크기에 제한을 받지 않는다. 즉, 동적할당을 받을 수 있다면 크기가 무한정 늘어난다.
+    * 반면, 삽입, 삭제 연산에 동적 메모리 할당이나 해제를 해야 하므로 시간이 좀 더 걸린다.
+    * 연결된 스택은 단순 연결 리스트로 충분히 구현 가능하다. **top을 정수가 아닌 노드를 가리키는 포인터로 선언**
+    * 공백 상태는 top 포인터가 NULL인 경우.
+    * 구현
+        '''
+            typedef struct StackNode {
+                element data;
+                struct StackNode *link;
+            } StackNode;
+
+            typedef struct {
+                StackNode *top;
+            } LinkedStackType;  // 관련된 데이터는 top 포인터 뿐이지만 일관성을 위해 구조체로 작성
+        '''
+    * 연산
+        1. push()
+            '''
+                void push(LinkedStackType *s, element item) {
+                    StackNode *newnode = (StackNode *)malloc(sizeof(StackNode));
+                    newnode->data = item;
+                    newnode->link = s->top;
+                    s->top = newnode;
+                }
+            '''
+        2. pop()
+            '''
+                element pop(LinkedStackType *s) {
+                    if (is_empty(s)) {
+                        fprintf(stderr, "스택이 비어있음\n");
+                        exit(1);
+                    }
+                    StackNode *removed = s->top;
+                    element value = removed->data;
+                    s->top = removed->link;
+                    free(removed);
+                    return value;
+                }
+            '''
+
+* 연결된 큐(linked queue)
+    * 크기가 제한되지 않는 반면, 링크 필드 때문에 메모리 공간을 더 많이 사용
+    * 단순 연결 리스트에 2개의 포인터를 추가, front와 rear가 처음과 끝 노드를 가리킨다.
+    * front는 삭제 연산과, rear는 삽입 연산과 관련이 있다. 공백 상태의 경우 front와 rear는 NULL이 된다.
+    * 구현
+        '''
+            typedef struct QueueNode {
+                element data;
+                struct QueueNode *link;
+            } QueueNode;
+
+            typedef struct {
+                QueueNode *front, *rear;
+            } LinkedQueueType;
+        '''
+    * 연산
+        1. enqueue()
+            ''' 
+                void enqueue(LinkedQueueType *s, element data) {
+                    QueueNode *newnode = (QueueNode *)malloc(sizeof(QueueNode));
+                    newnode->data = data;
+                    newnode->link = NULL;
+                    if (is_empty(s)) {
+                        s->front = s->rear = newnode;
+                    }
+                    s->rear->link = newnode;
+                    s->rear = newnode;
+                }
+            '''
+        2. dequeue()
+            '''
+                element dequeu(LinkedQueueType *s) {
+                    if (is_empty(s)) {
+                        frpintf(stderr, "큐가 비어있습니다.\n");
+                        exit(1);
+                    }
+                    QueueNode *removed = s->front;
+                    element value = removed->data;
+                    s->front = removed->link;
+                    if (s->front == NULL) {
+                        s->rear = NULL;
+                    }
+                    free(removed);
+                    return value;
+                }
+            '''
