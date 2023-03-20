@@ -359,36 +359,36 @@
         * '**자기 참조 구조체**'를 이용한다. => 자기 자신을 참조하는 포인터를 포함하는 구조체.
         * element 타입의 데이터 필드와 포인터가 저장되는 링크 필드로 정의
         * link 필드는 ListNode를 가리키는 포인터로 정의, 다음 노드의 주소를 저장한다.
-        '''
+        ```
         typedef int element;
         typedef struct {
             element data;
             struct ListNode *link;  // 자기 참조 구조체
         } ListNode;
-        '''
+        ```
     * 노드의 생성
         * 연결 리스트의 모든 데이터의 접근하기 위해, 헤드 포인터가 필요하다.
         * 노드가 없는 단순 연결리스트는 다음과 같이 생성한다.
-            '''
+            ```
             ListNode *head = NULL;
-            '''
+            ```
         * 즉, 리스트의 공백검사는 헤드 포인터가 NULL인지 확인한다.
         * 연결리스트는 필요할 때마다 노드를 동적 할당하여 생성한다. 
-            '''
+            ```
             head = (ListNode *)malloc(sizeof(ListNode));
             head->data =10; // 노드에 데이터를 저장한다.
             head->link = NULL;
-            '''
+            ```
     * 노드의 연결
         * 노드의 연결은 간단하게, 새로운 노드를 동적으로 생성 및 데이터를 저장하고 이전 노드의 링크에 생성한 노드의 주소를 넣는다.
-            '''
+            ```
             ListNode *p; 
             p = (ListNode *)malloc(sizeof(ListNode));
             p->data = 20;
             p->link = NULL;
 
             head->link = p; // head에 p노드를 연결한다.
-            '''
+            ```
     * 단순 연결 리스트의 연산 구현
         * 연결 리스트에는 대표적으로 다섯가지 연산이 있다.
             1. insert_first() : 맨앞에 데이터 추가
@@ -399,13 +399,13 @@
 
     * 다항식 : 연결 리스트 응용
         * 단순 연결 리스트로 다항식을 표현하려면, 계수, 지수, 링크로 필드가 세개인 구조체 노드를 선언한다.
-            '''
+            ```
             typedef struct ListNode {
                 int coef:
                 int expon;
                 struct ListNode *link;
             } ListNode;
-            '''
+            ```
         * 포인터를 이용하여 다항식의 연산을 처리하는 함수를 만들 수 있다.
         * 두 다항식을 저장한 연결리스트의 헤드 포인터가 A, B일 때 각각 p, q 포인터로 순회하며
             1. p.expon == q.expon
@@ -421,22 +421,22 @@
         * 많은 경우 연결 리스트의 노드의 갯수를 세는 size 변수도 같이 구현한다.
         * 헤더 노드를 이용하면 연결 리스트의 마지막에 노드를 추가할 때, 여러 편리함이 있다.
         * 헤더 노드를 ListType이라는 구조체로 만들어 사용한다.
-            '''
+            ```
             typedef struct ListType {
                 int size;
                 ListNode *head;
                 ListNode *tail;
             } ListType;
-            '''
+            ```
         * 헤더노드를 운용하기 위해선, 헤더 노드를 동적으로 생성하고 초기화해야한다.
-            '''
+            ```
             ListType* create() {
                 ListType *plist = (ListType *)malloc(sizeof(ListType));
                 plist->size = 0;
                 plist->head = plist->tail = NULL;
                 return plist;
             }
-            '''
+            ```
         
 
 ## 7. 연결 리스트 II
@@ -460,17 +460,17 @@
     * 이중 연결 리스트에서 포인터 p가 임의의 노드라고 할 때, p = p->llink->rlink = p->rlink->llink의 관계가 항상 성립한다.
     * 헤드 노드는 포인터 변수가 아닌, 구조체 변수이다. 이중 연결 리스트를 사용하기 전에 반드시 초기화 해야 한다.
     * 구현
-        '''
+        ```
         typedef int element;
         typedef struct DListNode {  // 이중 연결 노드 타입
             element data;
             struct DListNode *llink;
             struct DListNode *rlink;
         } DListNode;
-        '''
+        ```
     * 연산
         1. 삽입 연산
-            '''
+            ```
             void dinsert(DListNode *before, element data) {
                 DListNode *newnode = (DListNode *)malloc(sizeof(DListNode));
                 newnode->data = data;
@@ -479,16 +479,16 @@
                 before->rlink->llink = newnode;
                 before->rlink = newnode;
             }
-            '''
+            ```
         2. 삭제 연산
-            '''
+            ```
             void ddelete(DListNode *head, DListNode *removed) {
                 if (head == removed) return;
                 removed->llink->rlink = removed->rlink;
                 removed->rlink->llink = removed->llink;
                 free(removed);
             }
-            '''
+            ```
 
 * 연결된 스택(linked stack)
     * 스택을 연결 리스트로 구현하면 크기에 제한을 받지 않는다. 즉, 동적할당을 받을 수 있다면 크기가 무한정 늘어난다.
@@ -496,7 +496,7 @@
     * 연결된 스택은 단순 연결 리스트로 충분히 구현 가능하다. **top을 정수가 아닌 노드를 가리키는 포인터로 선언**
     * 공백 상태는 top 포인터가 NULL인 경우.
     * 구현
-        '''
+        ```
         typedef struct StackNode {
             element data;
             struct StackNode *link;
@@ -505,19 +505,19 @@
         typedef struct {
             StackNode *top;
         } LinkedStackType;  // 관련된 데이터는 top 포인터 뿐이지만 일관성을 위해 구조체로 작성
-        '''
+        ```
     * 연산
         1. push()
-            '''
+            ```
             void push(LinkedStackType *s, element item) {
                 StackNode *newnode = (StackNode *)malloc(sizeof(StackNode));
                 newnode->data = item;
                 newnode->link = s->top;
                 s->top = newnode;
             }
-            '''
+            ```
         2. pop()
-            '''
+            ```
             element pop(LinkedStackType *s) {
                 if (is_empty(s)) {
                     fprintf(stderr, "스택이 비어있음\n");
@@ -529,14 +529,14 @@
                 free(removed);
                 return value;
             }
-            '''
+            ```
 
 * 연결된 큐(linked queue)
     * 크기가 제한되지 않는 반면, 링크 필드 때문에 메모리 공간을 더 많이 사용
     * 단순 연결 리스트에 2개의 포인터를 추가, front와 rear가 처음과 끝 노드를 가리킨다.
     * front는 삭제 연산과, rear는 삽입 연산과 관련이 있다. 공백 상태의 경우 front와 rear는 NULL이 된다.
     * 구현
-        '''
+        ```
         typedef struct QueueNode {
             element data;
             struct QueueNode *link;
@@ -545,10 +545,10 @@
         typedef struct {
             QueueNode *front, *rear;
         } LinkedQueueType;
-        '''
+        ```
     * 연산
         1. enqueue()
-            ''' 
+            ``` 
             void enqueue(LinkedQueueType *s, element data) {
                 QueueNode *newnode = (QueueNode *)malloc(sizeof(QueueNode));
                 newnode->data = data;
@@ -559,9 +559,9 @@
                 s->rear->link = newnode;
                 s->rear = newnode;
             }
-            '''
+            ```
         2. dequeue()
-            '''
+            ```
             element dequeu(LinkedQueueType *s) {
                 if (is_empty(s)) {
                     frpintf(stderr, "큐가 비어있습니다.\n");
@@ -576,7 +576,7 @@
                 free(removed);
                 return value;
             }
-            '''
+            ```
 
 
 ## 8. 트리(tree)
@@ -620,12 +620,12 @@
     * 링크 표현법
         * 트리의 노드가 구조체로 표현되고, 각 노드가 왼쪽, 오른쪽 자식을 가리키는 두 개의 포인터를 갖는다.
         * 구현
-            '''
+            ```
             typedef struct TreeNode {
                 element data;
                 struct TreeNode *left, *right;
             } TreeNode;
-            '''
+            ```
         * **자식이 없는 쪽은 NULL 값을 갖는다.**
         * 장점 : 루트 노드를 가리키는 포인터만 있으면 트리안의 모든 노드에 접근할 수 있다.
 * 이진 트리의 순회
@@ -646,27 +646,27 @@
             2. 왼쪽 서브트리 방문
             3. 오른쪽 서브트리 방문
         * 전위 순회 스도코드
-            '''
+            ```
             preoreder(x):
             if x != NULL:
                 then print(DATA(x));
                 preorder(LEFT(x));
                 preorder(RIGHT(x));
-            '''
+            ```
     * **중위 순회(inorder traversal)**
         * 왼쪽 서브트리, 루트, 오른쪽 서브트리 순으로 방문한다.
         * 중위 순회 스도코드
-            '''
+            ```
             inoreder(x):
             if x != NULL:
                 then inorder(LEFT(x));
                 print(DATA(x));
                 inorder(RIGHT(x));
-            '''
+            ```
         * 즉, 전위, 중위 그리고 뒤에 나올 후위 순회 알고리즘까지 호출의 순서만 다르다.
     * **후위 순회(postorder traversal)**
         * 왼쪽 서브트리, 오른쪽 서브트리, 루트 순으로 방문한다.
-            '''
+            ```
             void postorder(TreeNode *root) {
                 if (root != NULL) {
                     postorder(root->left);
@@ -674,7 +674,7 @@
                     printf("%d", root->data);
                 }
             }
-            '''
+            ```
     * 반복적 순회 알고리즘 - DataStructure-ReprtitiveTraversal 참조.
         * 반복을 이용해 순회 알고리즘을 만들기 위해선, 스택이 필요하다.
         * 스택에 자식 노드들을 저장하고 꺼내면서 순회를 할 수 있다.
@@ -686,7 +686,7 @@
         * 레벨 순회는 큐 자료구조를 사용한다. bfs와 같다.
         * 먼저 큐에 있는 노드를 꺼내어 방문한 다음, 그 노드의 자식 노드를 큐에 삽입하는 과정을 큐가 빈 상태가 될 때까지 반복한다.
         * 구현
-        '''
+        ```
         void level_order(TreeNode *root) {
             QueueType q;
             init_queue(&q);
@@ -704,7 +704,7 @@
                 }
             }
         }
-        '''
+        ```
     * 문제에 따라 순회 방법을 선택. 부모 -> 자식 순으로 노드를 처리하기 위해선 전위 순회를 사용해야 한다.
     * 반대로 자식노드를 처리한 다음, 부모 노드를 처리하려면 후위 순회를 사용한다. 
     * 예를 들어 디렉토리의 용량을 계산하는 문제는 후위 순회를 사용해야 한다.
@@ -718,20 +718,19 @@
 
 * 이진트리의 추가 연산
     * 노드의 개수
-        '''
+        ```
         int get_node_count(TreeNode *root) {
             int count = 0;
             if (root != NULL)
                 count = 1 + get_node_count(root->left) + get_node_count(root->right);
             return count;
         }
-        '''
+        ```
     
     * 단말 노드 개수
-        '''
+        ```
         int get_leaf_node(TreeNode *root) {
-            int count = 0;
-            
+            int count = 0;                
             if (root != NULL) {
                 if (root->left == NULL && root->right == NULL) {
                     return 1;
@@ -741,10 +740,10 @@
             }
             return count;
         }
-        '''
+        ```
 
     * 높이 구하기
-        '''
+        ```
         int get_height(TreeNode *root) {
             int height = 0;
             if (root != NULL) {
@@ -752,7 +751,7 @@
             }
             return height;
         }
-        '''
+        ```
 
 * 스레드 이진 트리(threaded binary tree)
     * 이진 트리의 노드가 많아지면, 순환 호출을 이용한 순회는 상당히 비효율적이 될 수 있다.
@@ -763,11 +762,11 @@
         * NULL값을 갖는 링크에 중위 순회 방식에서, 선행 노드인 중위 선행자(inorder predecessor)나 후속 노드인 중위 후속자(inorder successor)를 저장시켜 놓은 트리가 스레드 이진 트리이다.
     * 이로써 각 노드들은 중위 순회의 순서대로 연결되고, 순회를 스택을 쓰지않고 효율적으로 처리할 수 있다.
     * 다만, 이 경우 NULL 링크에 스레드가 저장되면, 링크에 저장된게 자식을 가리키는 포인터인지, NULL값 대신 스레드가 저장되있는지 구별해주는 태그 필드가 필요하다.
-        '''
+        ```
         typedef struct TreeNode {
             int data;
             struct TreeNode *left, *right;
             int is_thread;  // True이면 오른쪽 링크가 스레드
         } TreeNode;
-        '''
+        ```
     
