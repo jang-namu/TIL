@@ -461,33 +461,33 @@
     * 헤드 노드는 포인터 변수가 아닌, 구조체 변수이다. 이중 연결 리스트를 사용하기 전에 반드시 초기화 해야 한다.
     * 구현
         '''
-            typedef int element;
-            typedef struct DListNode {  // 이중 연결 노드 타입
-                element data;
-                struct DListNode *llink;
-                struct DListNode *rlink;
-            } DListNode;
+        typedef int element;
+        typedef struct DListNode {  // 이중 연결 노드 타입
+            element data;
+            struct DListNode *llink;
+            struct DListNode *rlink;
+        } DListNode;
         '''
     * 연산
         1. 삽입 연산
             '''
-                void dinsert(DListNode *before, element data) {
-                    DListNode *newnode = (DListNode *)malloc(sizeof(DListNode));
-                    newnode->data = data;
-                    newnode->llink = before;
-                    newnode->rlink = before->rlink;
-                    before->rlink->llink = newnode;
-                    before->rlink = newnode;
-                }
+            void dinsert(DListNode *before, element data) {
+                DListNode *newnode = (DListNode *)malloc(sizeof(DListNode));
+                newnode->data = data;
+                newnode->llink = before;
+                newnode->rlink = before->rlink;
+                before->rlink->llink = newnode;
+                before->rlink = newnode;
+            }
             '''
         2. 삭제 연산
             '''
-                void ddelete(DListNode *head, DListNode *removed) {
-                    if (head == removed) return;
-                    removed->llink->rlink = removed->rlink;
-                    removed->rlink->llink = removed->llink;
-                    free(removed);
-                }
+            void ddelete(DListNode *head, DListNode *removed) {
+                if (head == removed) return;
+                removed->llink->rlink = removed->rlink;
+                removed->rlink->llink = removed->llink;
+                free(removed);
+            }
             '''
 
 * 연결된 스택(linked stack)
@@ -497,38 +497,38 @@
     * 공백 상태는 top 포인터가 NULL인 경우.
     * 구현
         '''
-            typedef struct StackNode {
-                element data;
-                struct StackNode *link;
-            } StackNode;
+        typedef struct StackNode {
+            element data;
+            struct StackNode *link;
+        } StackNode;
 
-            typedef struct {
-                StackNode *top;
-            } LinkedStackType;  // 관련된 데이터는 top 포인터 뿐이지만 일관성을 위해 구조체로 작성
+        typedef struct {
+            StackNode *top;
+        } LinkedStackType;  // 관련된 데이터는 top 포인터 뿐이지만 일관성을 위해 구조체로 작성
         '''
     * 연산
         1. push()
             '''
-                void push(LinkedStackType *s, element item) {
-                    StackNode *newnode = (StackNode *)malloc(sizeof(StackNode));
-                    newnode->data = item;
-                    newnode->link = s->top;
-                    s->top = newnode;
-                }
+            void push(LinkedStackType *s, element item) {
+                StackNode *newnode = (StackNode *)malloc(sizeof(StackNode));
+                newnode->data = item;
+                newnode->link = s->top;
+                s->top = newnode;
+            }
             '''
         2. pop()
             '''
-                element pop(LinkedStackType *s) {
-                    if (is_empty(s)) {
-                        fprintf(stderr, "스택이 비어있음\n");
-                        exit(1);
-                    }
-                    StackNode *removed = s->top;
-                    element value = removed->data;
-                    s->top = removed->link;
-                    free(removed);
-                    return value;
+            element pop(LinkedStackType *s) {
+                if (is_empty(s)) {
+                    fprintf(stderr, "스택이 비어있음\n");
+                    exit(1);
                 }
+                StackNode *removed = s->top;
+                element value = removed->data;
+                s->top = removed->link;
+                free(removed);
+                return value;
+            }
             '''
 
 * 연결된 큐(linked queue)
@@ -537,43 +537,237 @@
     * front는 삭제 연산과, rear는 삽입 연산과 관련이 있다. 공백 상태의 경우 front와 rear는 NULL이 된다.
     * 구현
         '''
-            typedef struct QueueNode {
-                element data;
-                struct QueueNode *link;
-            } QueueNode;
+        typedef struct QueueNode {
+            element data;
+            struct QueueNode *link;
+        } QueueNode;
 
-            typedef struct {
-                QueueNode *front, *rear;
-            } LinkedQueueType;
+        typedef struct {
+            QueueNode *front, *rear;
+        } LinkedQueueType;
         '''
     * 연산
         1. enqueue()
             ''' 
-                void enqueue(LinkedQueueType *s, element data) {
-                    QueueNode *newnode = (QueueNode *)malloc(sizeof(QueueNode));
-                    newnode->data = data;
-                    newnode->link = NULL;
-                    if (is_empty(s)) {
-                        s->front = s->rear = newnode;
-                    }
-                    s->rear->link = newnode;
-                    s->rear = newnode;
+            void enqueue(LinkedQueueType *s, element data) {
+                QueueNode *newnode = (QueueNode *)malloc(sizeof(QueueNode));
+                newnode->data = data;
+                newnode->link = NULL;
+                if (is_empty(s)) {
+                s->front = s->rear = newnode;
                 }
+                s->rear->link = newnode;
+                s->rear = newnode;
+            }
             '''
         2. dequeue()
             '''
-                element dequeu(LinkedQueueType *s) {
-                    if (is_empty(s)) {
-                        frpintf(stderr, "큐가 비어있습니다.\n");
-                        exit(1);
-                    }
-                    QueueNode *removed = s->front;
-                    element value = removed->data;
-                    s->front = removed->link;
-                    if (s->front == NULL) {
-                        s->rear = NULL;
-                    }
-                    free(removed);
-                    return value;
+            element dequeu(LinkedQueueType *s) {
+                if (is_empty(s)) {
+                    frpintf(stderr, "큐가 비어있습니다.\n");
+                    exit(1);
                 }
+                QueueNode *removed = s->front;
+                element value = removed->data;
+                s->front = removed->link;
+                if (s->front == NULL) {
+                    s->rear = NULL;
+                }
+                free(removed);
+                return value;
+            }
             '''
+
+
+## 8. 트리(tree)
+* 트리는 부모-자식 관계의 노드들로 이루어진 계층적인 구조의 자료구조이다.
+    * 트리에서 가장 높은 요소를 root, 나머지 노드들을 서브트리(subtree)라고 부른다.
+    * subtree 내부에서도 root와 subtree의 관계로 나눌 수 있다
+    * 트리는 root와 subtree는 간선(edge)으로 이어져 있다.
+    * 노드들 간에는 부모-자식 관계, 형제 관계, 조상-자손 관계가 있다.
+    * 자식이 없는 노드를 단말 노드(leaf node, terminal node), 자식이 있는 노드를 비단말 노드(nonterminal node)라고 한다.
+    * 차수는 한 노드가 가지는 자식 수를 의미하며, 레벨(level)은 루트가 1부터 시작해서 내려갈수록 숫자가 커진다.
+    * 트리의 차수는 트리가 가진 노드의 차수 중 가장 큰 값이며 높이(height)는 최대 레벨과 같다. 트리의 집합은 포레스트(forest)라고 한다.
+    * 결정 트리(decision tree) : 인간의 의사 결정 구조를 표현하는 방법 중 하나. 인공지능 문제에서 자주 사용
+* 이진 트리(binary tree) : 가장 많이 쓰이는 트리.
+    * 모든 노드가 2개의 서브트리를 가지고 있다. 서브트리는 공집합일 수 있다.
+    * 즉, 이진트리의 모든 노드는 최대 2개의 자식 노드가 존재한다.(모든 노드의 차수가 2 이하)
+    * 서브트리 간에 순서가 존재한다. 왼쪽과 오른쪽의 서브 트리는 서로 구별된다.
+    * 이진 트리의 정의
+        1. 공집합이거나
+        2. 루트와 왼쪽 서브 트리, 오른쪽 서브 트리로 구성된 노드들의 유한 집합으로 정의된다. 이진트리의 서브트리들은 모두 이진트리여야 한다.
+    * 이진트리의 성질
+        * 높이가 h인 이진트리
+            * 최소 h개의 노드를 가지며, 최대 2**h - 1개의 노드를 가진다.
+        * n개의 노드를 가지는 이진트리
+            * 최대 n의 높이를 가지며, 최소 upper(log(n+1))개의 노드를 가진다.(log의 base는 2)
+    * 이진트리의 분류
+        1. 포화 이진 트리(full binary tree) : 각 레벨에 노드가 꽉 차있는 이진트리. 높이가 k인 경우, 노드 2**k - 1개를 갖는다. 
+            * 노드의 번호를 부여: 레벨 단위로 왼쪽->오른쪽 순서로 번호를 붙인다.
+        2. 완전 이진 트리(complete binary tree) : 높이가 k인 경우 1부터 k-1레벨까지 노드가 모두 채워져 있고, 마지막 레벨에서는 노드가 왼쪽에서부터 중간에 빈 곳 없이 있는 트리(k레벨이 꼭 다 차진 않아도 됨)
+            * 포화 이진 트리와 같은 방법으로 노드에 번호를 붙인다.
+        3. 기타 이진 트리
+* 이진 트리의 표현
+    * 배열 표현법
+        * 저장하고자 하는 이진 트리를 일단 완전 이진 트리라고 가정하고 번호에 맞는 인덱스에 값을 저장한다.
+        * 경사 이진 트리나나 기타 이진 트리의 경우 낭비되는 공간이 많음
+        * 이진 트리의 깊이가 k이면, 2**k개의 공간을 연속적으로 할당한 다음 완전 이진 트리의 번호대로 노드들을 저장한다. 
+        * 루트가 1부터 시작하므로 배열의 0번째 요소는 사용하지 않는다. 
+        * 장점 : 인덱스만 알면, 노드의 부모나 자식을 쉽게 알 수 있다.
+            * 노드 i의 부모 노드 인덱스 = i // 2
+            * 노드 i의 왼쪽 자식 노드 인덱스 = i * 2
+            * 노드 i의 오른쪽 자식 노드 인덱스 = i * 2 + 1
+    * 링크 표현법
+        * 트리의 노드가 구조체로 표현되고, 각 노드가 왼쪽, 오른쪽 자식을 가리키는 두 개의 포인터를 갖는다.
+        * 구현
+            '''
+            typedef struct TreeNode {
+                element data;
+                struct TreeNode *left, *right;
+            } TreeNode;
+            '''
+        * **자식이 없는 쪽은 NULL 값을 갖는다.**
+        * 장점 : 루트 노드를 가리키는 포인터만 있으면 트리안의 모든 노드에 접근할 수 있다.
+* 이진 트리의 순회
+    * 순회(traversal)은 이진 트리에 속하는 모든 노드를 한 번씩 방문하여 노드가 가지고 있는 데이터를 목적에 맞게 처리하는 것을 의미한다.
+    * 스택, 큐, 리스트 등은 데이터를 선형으로 저장함 -> 순회 방법이 한 가지
+    * 하지만 트리는 계층적이고 2차원적인 자료구조 -> 순회 방법이 여러가지 있을 수 있음
+    * 이진 트리의 순회 방법은 루트와 왼쪽 서브트리, 오른쪽 서브트리를 어떻게 방문하냐에 따라 전위, 중위, 후위로 나뉜다.
+    * 여기서, 왼쪽 서브트리는 항상 오른쪽 서브트리보다 일찍 방문하고, 전위, 중위, 후위의 이름은 루트를 방문하는 시기에 따라 이름 붙힌다.
+    * 루트 방문을 V, 왼쪽 서브트리 방문을 L, 오른쪽 서브트리 방문을 R이라 하면 
+        1. 전위(preorder traversal), VLR
+        2. 중위(inorder traversal), LVR
+        3. 후위(postorder traversal), LRV
+        * 일반적으로 이진 트리의 순회 알고리즘은 순환 기법을 이용하여 서브트리에도 같은 순회 방문 순서를 구현한다.
+    
+    * **전위 순회(preorder traversal)**
+        * 루트를 먼저 방문하고 그 다음에 왼쪽, 오른쪽 서브트리 순으로 방문한다.
+            1. 루트 노드 방문
+            2. 왼쪽 서브트리 방문
+            3. 오른쪽 서브트리 방문
+        * 전위 순회 스도코드
+            '''
+            preoreder(x):
+            if x != NULL:
+                then print(DATA(x));
+                preorder(LEFT(x));
+                preorder(RIGHT(x));
+            '''
+    * **중위 순회(inorder traversal)**
+        * 왼쪽 서브트리, 루트, 오른쪽 서브트리 순으로 방문한다.
+        * 중위 순회 스도코드
+            '''
+            inoreder(x):
+            if x != NULL:
+                then inorder(LEFT(x));
+                print(DATA(x));
+                inorder(RIGHT(x));
+            '''
+        * 즉, 전위, 중위 그리고 뒤에 나올 후위 순회 알고리즘까지 호출의 순서만 다르다.
+    * **후위 순회(postorder traversal)**
+        * 왼쪽 서브트리, 오른쪽 서브트리, 루트 순으로 방문한다.
+            '''
+            void postorder(TreeNode *root) {
+                if (root != NULL) {
+                    postorder(root->left);
+                    postorder(root->right);
+                    printf("%d", root->data);
+                }
+            }
+            '''
+    * 반복적 순회 알고리즘 - DataStructure-ReprtitiveTraversal 참조.
+        * 반복을 이용해 순회 알고리즘을 만들기 위해선, 스택이 필요하다.
+        * 스택에 자식 노드들을 저장하고 꺼내면서 순회를 할 수 있다.
+        * 순환 호출도 사실은 시스템 스택을 사용하는 것이기 때문에, 별도의 스택을 사용하면 순환 호출을 흉내낼 수 있다.
+    
+    * 레벨 순회(level order)
+        * 각 노드를 레벨 순으로 검사. 같은 레벨의 경우 왼쪽에서 오른쪽으로 순회
+        * 전위, 중위, 후위 방법은 모두 스택을 사용한 방법.(반복이든, 순환(시스템스택)이든)
+        * 레벨 순회는 큐 자료구조를 사용한다. bfs와 같다.
+        * 먼저 큐에 있는 노드를 꺼내어 방문한 다음, 그 노드의 자식 노드를 큐에 삽입하는 과정을 큐가 빈 상태가 될 때까지 반복한다.
+        * 구현
+        '''
+        void level_order(TreeNode *root) {
+            QueueType q;
+            init_queue(&q);
+
+            if (root == NULL) return;
+            enqueue(&q, root);
+            while (!is_empty(&q)) {
+                root = dequeue(&q);
+                printf(" [%d] ", root->data);
+                if (root->left) {
+                    enqueue(&q, root->left);
+                }
+                if (root->right) {
+                    enqueue(&q, root->right);
+                }
+            }
+        }
+        '''
+    * 문제에 따라 순회 방법을 선택. 부모 -> 자식 순으로 노드를 처리하기 위해선 전위 순회를 사용해야 한다.
+    * 반대로 자식노드를 처리한 다음, 부모 노드를 처리하려면 후위 순회를 사용한다. 
+    * 예를 들어 디렉토리의 용량을 계산하는 문제는 후위 순회를 사용해야 한다.
+
+* 트리의 응용
+    1. 수식 트리 처리
+        * 수식 트리는(exprssion tree)는 단말노드는 피연산자, 비단말노드(nonterminal node)는 연산자가 된다.
+        * 수식 트리를 각각 전위, 중위, 후위 순회 방법으로 읽으면, 신기하게도 각각 전위, 중위 후위 표기 수식이 된다. 
+    2. 디렉토리 용량
+        * 디렉토리 용량을 구하기 위해선 하위 디렉토리의 용량부터 구해야함 (후위 순회)
+
+* 이진트리의 추가 연산
+    * 노드의 개수
+        '''
+        int get_node_count(TreeNode *root) {
+            int count = 0;
+            if (root != NULL)
+                count = 1 + get_node_count(root->left) + get_node_count(root->right);
+            return count;
+        }
+        '''
+    
+    * 단말 노드 개수
+        '''
+        int get_leaf_node(TreeNode *root) {
+            int count = 0;
+            
+            if (root != NULL) {
+                if (root->left == NULL && root->right == NULL) {
+                    return 1;
+                } else {
+                    count = get_leaf_node(root->left) + get_leaf_node(root->right);
+                }
+            }
+            return count;
+        }
+        '''
+
+    * 높이 구하기
+        '''
+        int get_height(TreeNode *root) {
+            int height = 0;
+            if (root != NULL) {
+                height = 1 + max(get_height(root->left), get_height(root->right));
+            }
+            return height;
+        }
+        '''
+
+* 스레드 이진 트리(threaded binary tree)
+    * 이진 트리의 노드가 많아지면, 순환 호출을 이용한 순회는 상당히 비효율적이 될 수 있다.
+    * 스택(순환호출)을 사용하지 않고, 좀 더 효율적으로 순회하는 방법
+    * 아이디어
+        * n개의 노드로 이루어진 이진 트리는 총 2n개의 링크 필드를 갖는다.
+        * 2n개의 링크 필드 중, n-1개의 노드와 노드를 잇는 링크를 제외한 n+1개의 링크는 NULL값을 갖는다.
+        * NULL값을 갖는 링크에 중위 순회 방식에서, 선행 노드인 중위 선행자(inorder predecessor)나 후속 노드인 중위 후속자(inorder successor)를 저장시켜 놓은 트리가 스레드 이진 트리이다.
+    * 이로써 각 노드들은 중위 순회의 순서대로 연결되고, 순회를 스택을 쓰지않고 효율적으로 처리할 수 있다.
+    * 다만, 이 경우 NULL 링크에 스레드가 저장되면, 링크에 저장된게 자식을 가리키는 포인터인지, NULL값 대신 스레드가 저장되있는지 구별해주는 태그 필드가 필요하다.
+        '''
+        typedef struct TreeNode {
+            int data;
+            struct TreeNode *left, *right;
+            int is_thread;  // True이면 오른쪽 링크가 스레드
+        } TreeNode;
+        '''
+    
