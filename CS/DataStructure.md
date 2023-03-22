@@ -758,15 +758,78 @@
     * 스택(순환호출)을 사용하지 않고, 좀 더 효율적으로 순회하는 방법
     * 아이디어
         * n개의 노드로 이루어진 이진 트리는 총 2n개의 링크 필드를 갖는다.
-        * 2n개의 링크 필드 중, n-1개의 노드와 노드를 잇는 링크를 제외한 n+1개의 링크는 NULL값을 갖는다.
+        * 2n개의 링크 필드 중 n-1개의 노드와 노드를 잇는 링크를 제외한, n+1개의 링크는 NULL값을 갖는다.
         * NULL값을 갖는 링크에 중위 순회 방식에서, 선행 노드인 중위 선행자(inorder predecessor)나 후속 노드인 중위 후속자(inorder successor)를 저장시켜 놓은 트리가 스레드 이진 트리이다.
     * 이로써 각 노드들은 중위 순회의 순서대로 연결되고, 순회를 스택을 쓰지않고 효율적으로 처리할 수 있다.
     * 다만, 이 경우 NULL 링크에 스레드가 저장되면, 링크에 저장된게 자식을 가리키는 포인터인지, NULL값 대신 스레드가 저장되있는지 구별해주는 태그 필드가 필요하다.
+    * 구현
         ```
         typedef struct TreeNode {
             int data;
             struct TreeNode *left, *right;
             int is_thread;  // True이면 오른쪽 링크가 스레드
         } TreeNode;
+        ```
+    * 연산
+        ```
+        TreeNode* find_successor(TreeNode *p) {
+            TreeNode *q = p->right;
+            if (q == NULL || p->is_thread == TRUE) {
+                return q;
+            }
+            while (q->left != NULL) q = q->left;
+            return q;
+        }
+
+        void thread_inorder(TreeNode *root) {
+            TreeNode *q = root;
+
+            while (q->left != NULL) q = q->left;
+            do {
+                printf("[%d] ", q->data);
+                q = find_successor(q);
+            } while (q);
+        }
+        ```
+* 이진 탐색 트리(binary search tree)
+    * 이진 탐색 트리는 이진 트리 기반의 탐색을 위한 자료구조이다.
+        * 탐색
+            * 탐색은 컴퓨터에서 가장 시간이 많이 걸리는 작업 중 하나. 또한, 많이 쓰이는 만큼 중요한 연산이다.
+            * 탐색은 레코드(record)의 집합에서 특정한 레코드를 찾아내는 작업을 의미한다.
+            * 즉, 키를 입력하여 테이블에서 특정한 키를 가진 레코드(다수의 필드로 구성)를 찾는 것이 탐색이다.
+    * 정의
+        1. 모든 원소의 키는 유일한 키를 가진다.
+        2. 왼쪽 서브 트리 키들은 루트 키보다 작다.
+        3. 오른쪽 서브 트리 키들은 루트 키보다 크다.
+        4. 왼쪽과 오른쪽 서브 트리도 이진 탐색 트리이다.
+    * 위의 정의에 따라, 이진 탐색 트리를 **중위 순회**할 경우 오름차순으로 정렬된 키 값이 나온다.
+        * 이진 탐색트리가 어느 정도 정렬된 상태를 유지하는 것을 알 수 있다.
+    * 탐색연산
+        * 이진 탐색 트리에서 특정한 키값을 가진 노드를 찾기 위해서는, 먼저 주언진 탐색키 값과 루트 노드의 키값을 비교한다.
+        * 같으면 탐색 성공. 탐색키가 작으면 왼쪽, 크면 오른쪽 서브트리로 가서 다시 탐색을 실행한다.
+        ```
+        // 순환적 탐색연산
+        TreeNode* search(TreeNode *root, int key) {
+            if (root == NULL) return NULL;
+            if (key == root->key) return root;
+            else if (key < root->key) {
+                search(root->left, key);
+            } else {
+                search(root->right, key);
+            }
+        }
+
+        // 반복적 탐색연산
+        TreeNode* search(TreeNode *root, int key) {
+            while (root != NULL) {
+                if (key == root->key) return root;
+                else if (key < root->key) {
+                    root = root->left;
+                } else {
+                    root = root->right;
+                }
+            }
+            return NULL;
+        }  
         ```
     
