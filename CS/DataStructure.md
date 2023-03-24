@@ -819,7 +819,7 @@
             }
         }
 
-        // 반복적 탐색연산
+        // 반복적 탐색연산, 좀 더 효율적
         TreeNode* search(TreeNode *root, int key) {
             while (root != NULL) {
                 if (key == root->key) return root;
@@ -832,4 +832,70 @@
             return NULL;
         }  
         ```
+    * 삽입연산
+        * 이진 탐색 트리에서 삽입 연산을 하기 위해선, 먼저 탐색이 수행되어야 한다.
+        * 이진 탐색 트리에서 키 값을 고유한 값이어야 한다. 즉 탐색과정에서 같은 키 값을 찾았다면 새로 추가하지 않고 return한다.
+        * 트리에 같은 키 값이 존재하지 않을 시에는 탐색을 실패한 위치가, 새로운 노드를 삽입하는 위치가 된다.
+        * 새로운 노드는 항상 단말노드에 추가된다. 즉, 단말노드를 발견할 때까지 루트에서 키를 검색하고 발견되면 새로운 노드가 단말 노드의 하위 노드로 추가된다.
+        ```
+        TreeNode* insert_node(TreeNode *node, int key) {
+            if (node == NULL) {
+                TreeNode *temp = (TreeNode *)malloc(sizeof(TreeNode));
+                temp->key = key;
+                temp->left = temp->right = NULL;
+                return temp;
+            }
+            if (node->key > key) {
+                node->left = insert_node(node->left, key);
+            } else if (node->key < key) {
+                node->right = insert_node(node->right, key);
+            }
+            return node;
+        }
+        ```
+    * 삭제연산
+        * 삭제연산은 이진탐색트리에서 가장 복잡한 연산이다. 
+        * 먼저 노드를 삭제하기 위해서는 해당 노드가 있는지 탐색한다.
+        * 노드가 탐색되면 다음 3가지 경우를 고려한다.
+            1. 노드가 단말노드인 경우.
+            2. 노드가 왼쪽 또는 오른쪽 서브트리 중 하나만을 가질 경우
+            3. 노드가 양쪽 서브트리를 가질 경우.
+
+        * 첫째, 삭제하려는 노드가 단말노드인 경우. - 부모노드의 링크를 NULL로 만들고 free()로 메모리를 해제한다.
+        * 둘째, 한쪽 서브트리를 가질 경우. - 자기 노드는 삭제하고 서브트리는 자기 노드의 부모 노드에 붙여준다.
+        * 셋째, 양쪽 서브트리 존재. - 후계자 노드를 정해, 값만 바꾸고 다시 서브트리에서 사용된 후계자 노드를 삭제한다.
+            * 후계자 노드는 왼쪽 서브트리의 오른쪽 끝과, 오른쪽 서브트리의 왼쪽 끝(두 값이 삭제할 루트 노드와 가장 가까움)를 사용할 수 있다.
+            * 일반적으로 오른쪽 서브트리의 후계자 노드를 사용한다.
+        ```
+        TreeNode* delete_node(TreeNode *root, int key) {
+            if (root == NULL) return root;
+            
+            if (key < root->key) {
+                root->left = delete_node(root->left, key);
+            } else if (key > root->key) {
+                root->right = delete_node(root->right, key);
+            } else {
+                if (root->left == NULL) {
+                    TreeNode *temp = root->right;
+                    free(root);
+                    return temp;
+                } else if (root->right == NULL) {
+                    TreeNode *temp = root->left;
+                    free(root);
+                    return temp;
+                }
+                TreeNode *temp = root->right;
+                while (temp->left != NULL) temp = temp->left;
+                root->key = temp->key;
+                root->right = delete_node(root->right, temp->key);
+            }
+            return root;
+        }
+        ``` 
+    * 이진탐색트리 분석
+        * 높이가 h인 이진 탐색 트리에서의 탐색, 삽입, 삭제 연산의 시간복잡도는 O(h)가 된다. 삽입과 삭제 시, 탐색 필요.
+        * 따라서 n개의 노드를 가지는 이진 탐색 트리의 경우, 일반적인 이진 트리의 높이는 log(n)(기저=2)의 상한이므로 이진 탐색 트리 연산의 평균적인 시간복잡도도 O(log(n))이다.
+        * 다만, 최악의 경우 한쪽으로 치우치는 경사트리가 되어서 트리의 높이가 n이 된다면, 선형 탐색과 같은 O(n) 시간복잡도가 될 수 있다.
+        * 따라서 트리의 높이를 log(n)의 상한으로 한정시키는 균형기법으로 AVL트리를 비롯한 여러 기법들이 존재한다.
+        
     
