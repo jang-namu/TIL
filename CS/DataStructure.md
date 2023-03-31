@@ -996,3 +996,130 @@
         5. 완성된 허프만 트리에서 왼쪽 간선은 비트 1 오른쪽 간선은 비트 0을 나타낸다.
         6. 이제 각 글자에 대한 호프만 코드는 단순히 루트 노드에서 단말 노드까지의 경로에 있는 간선의 값을 읽으면 된다.
 
+
+## 10. 그래프 I
+* 그래프는 객체 사이 연결 관계를 표현하는 자료구조로 대부분의 현실 문제를 나타낼 수 있다.
+* 그래프는 인접 행렬이나 인접 리스트로 표현한다.
+    * 정의
+        * 그래프는 정점(vertex)와 간선(edge)들의 유한집합이다. 정점은 객체, 간선은 객체들간의 관계를 의미한다.
+    * 용어
+        * 무방향(undirected) 그래프, 방향(directed) 그래프
+            * 그래프의 간선의 종류에 따른 분류. 무방향은 간선을 통해 양방향을 갈 수 있으며 (A, B)로 표현한다.
+            * 방향 그래프는 <A, B>로 나타내고 간선을 통해 A->B의 방향으로 밖에 움직이 못 한다.
+        * 가중치(weighted) 그래프 or Network
+            * 간선에 가중치가 존재하는 그래프이다.
+            * 가중치는 정점간의 연결강도 및 여러 관계를 표현한다.
+        * 부분 그래프(subgraph)
+            * 어떤 그래프의 일부 정점과 간선으루 이루어진 그래프
+        * 정점의 차수(degree)
+            * 인접 정점(adjacent vertex)이란 간선에 의해 직접 연결된 정점을 뜻한다.
+            * 정점의 차수는 그 정점에 인접한 정점의 수를 말하며, 무방향 그래프에서 전체 차수의 합은 간선 수의   2배가 된다.
+            * 방향 그래프에서는 차수를, 간선의 방향에 따라 진입차수(in-degree)와 진출차수(out-degree)로 나눈다.
+        * 경로(path)
+            * 임의의 두 정점 u와 v사이 이동할 수 있는 간선이 존재하면 그 길을 경로라고 한다.
+            * 경로 중 반복되는 간선이 없을 경우 단순 경로(simple path)라고 하며, 단순 경로의 시작과 끝 정점이   같다면 이를 **사이클(cycle)**이라 한다.
+        * 연결(connected) 그래프, 완전(complete) 그래프
+            * 무방향 그래프에 있는 모든 정점쌍에 대해 항상 경로가 존재한다면 이를 연결 그래프라고 한다.
+            * 트리는 특수한 형태의 그래프로 사이클을 갖지않는 연결 그래프이다.
+            * 완전 그래프는 그래프의 모든 정점 간에 간선이 존재하는 그래프를 말한다.
+            * 무방향 완전 그래프에서 정점이 n개이면, 간선의 수는 n(n-1)/2 가 된다.
+    * 그래프 표현 방법
+        * 인접 행렬(adjacency matrix) : 2차원 배열을 이용하여 표현
+            * N x N 크기의 행렬로 표현. 간선이 존재하면 1, 존재하지 않으면 0
+            * **무방향 그래프의 경우, 대칭행렬이므로 위 삼각, 또는 아래 삼각만으로 표현가능**
+            * 두 정점 사이 간선이 존재하는지 빠르게 확인 가능하다.
+            * 다만, 희소 그래프의 경우 메모리 낭비가 심하고, 전체 간선을 돌아보기 위해 O(N^2) 시간이 소요된다.
+            * 구현
+            ```
+            typedef struct GrpahType {
+                int num_vertices;
+                int matrix[MAX_VERTICES][MAX_VERTICES];
+            } GrpahType;
+            ```
+        * 인접 리스트(adjacency list) : 간선 정보를 담는 여러 개의 연결 리스트와 이를 저장하는 하나의 연결  리스트로 표현
+            * n(정점)개의 연결 리스트와, 이를 가리키는 n개의 헤더노드, 2m(간선)개의 노드가 필요하다.(무방향)
+            * 따라소 간선이 적은 희소그래프에 적합하다.
+            * 두 정점 사이 간선이 존재하는지 확인하기 위해선 정점 차수만큼의 시간이 필요하다.
+            * 전체 간선을 돌아보기 위해 O(n+m) 시간이 걸린다.
+            * 구현
+            ```
+            typedef struct GraphNode {
+                int vertex;
+                struct GrpahNode *link;
+            } GraphNode;
+
+            typedef struct GraphType {
+                int num_vertices;
+                GraphNode *adj[MAX_VERTICES];
+            } GraphType;
+            ```
+    * 그래프 탐색
+        * 하나의 정점으로부터 시작하여 차례대로 모든 정점들을 한 번씩 방문하는 것.
+        * DFS(Depth First Search), 깊이 우선 탐색
+            * 시작 정점에서 출발하여 연결된 정점으로 이동한 후, 이동한 정점을 시작 정점으로 아직 방문하지 않은 정점에 대해 다시 DFS를 시작한다.
+            * visited 배열을 이용해 방문한 노드를 관리하고, 새로 정해진 시작 정점에서 더 이상 갈 곳이 없는 경우, 종료하고 돌아와서 이전 시작 정점의 탐색을 계속한다.
+            * 즉, DFS는 순환적인 형태를 가지고 있으며 흔히 순환적 방법 또는 스택을 이용해 구현한다.
+            ```
+            // 순환적인 방법
+            void dfs(GraphType *graph, int *visited, int start) {
+                visited[start] = 1;
+                for (GraphNode *temp = graph->adj[start]; temp != NULL; temp = temp->link) {
+                    if (visited[temp->vertex]) continue;
+                    dfs(graph, visited, temp->vertex);
+                }
+            }
+
+            // 스택을 이용
+            void dfs(GraphType *graph, int start) {
+                int temp;
+                int *visited = (int *)calloc(MAX_VERTICES, sizeof(int));
+                Stack *stack = (Stack *)malloc(sizeof(Stack));
+                visited[start] = 1;
+                init(stack);
+                push(stack, start);
+
+                while (!is_empty(stack)) {
+                    temp = pop(stack);
+                    for (GraphNode *node = graph->adj[temp]; node != NULL; node = node->link) {
+                        if (visited[node->vertex]) continue;
+                        visited[node->vertex] = 1;
+                        push(stack, node->vertex);
+                    }
+                }
+                free(visited);
+                free(stack);
+            }
+            ```
+            * 두 방법 모두 인접 리스트의 경우 O(n+m), 인정 행렬은 O(n^2)의 시간이 걸린다.
+        * BFS(Breadth First Search), 넓이 우선 탐색
+            * 넓이 우선 탐색은 트리의 레벨 순회와 비슷하다. 시작 정점으로 부터 거리가 1인 정점부터 시작해 2, 3.. 순으로 탐색하는 방법이다.
+            * 즉, 시작 정점으로부터 가까운 정점을 먼저 방문하고 멀리 떨어져 있는 정점을 나중에 방문한다.
+            * 이를 구현하기 위해 선입선출 할 수 있는 큐(Queue) 자료구조를 사용한다.
+            * 알고리즘은 큐가 소진될 때 까지, 큐에서 정점을 꺼내서 방문하고 인접 정점들을 큐에 추가한다. 
+            * 구현
+            ```
+            void bfs(GrpahType *graph, int start) {
+                int *visited = (int *)calloc(graph->num_vertices, sizeof(int));
+                visited[start] = 1;
+                Queue *queue = (Queue *)malloc(sizeof(Queue));
+                init(queue);
+                enqueue(queue, start);
+
+                int temp;
+                GraphNode *node;
+                while (!is_empty(queue)) {
+                    temp = dequeue(queue);
+                    for (node = grpah->adj[temp]; node; node = node->link) {
+                        if (!visited[node->vertex]) {
+                            visited[node->vertex] = 1;
+                            enqueue(queue, node->vertex);
+                        }
+                    }
+                }
+                free(visited);
+                free(queue);
+            }
+            ```
+            * 너비 우선 탐색도 역시, 인접 행렬의 경우 O(n^2), 인접 리스트로 구현 시 O(n+m) 시간이 소요된다.
+
+
