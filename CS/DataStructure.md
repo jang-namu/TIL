@@ -1441,4 +1441,120 @@
         * 합병        O(nlogn)O(nlogn)O(nlogn)
         * 힙          O(nlogn)O(nlogn)O(nlogn)
         * 기수        O(kn)   O(kn)   O(kn)
+
         
+## 13. 탐색
+* 탐색은 컴퓨터 시스템에서 가장 많이 수행되는 연산이다. 효율적인 탐색은 언제나 중요하다.
+* 정렬되지 않은 배열에서의 탐색 - 사실상 쓰지않는다.
+    * 순차 탐색(sequential search)
+        * 배열을 0~n-1까지 돌아보며 key값과 비교. 가장 원시적인 형태
+    * 개선된 순차 탐색
+        * 배열에 마지막에 찾길 원하는 key값을 추가하고, 순차탐색과 같이 key값과 비교한다.
+        * 다만, for문에서 i가 범위를 벗어나는지 비교연산을 수행하지 않아 조금 더 효율적이다.
+        ```
+        int i;
+        list[MAX_SIZE] = key;
+        for (i=0; list[i] != key; i++)
+            ;
+        if (i == MAX_SIZE) return -1;
+        else return i
+        ```
+* 정렬된 배열에서의 탐색
+    * **이진 탐색(binary search)**
+        * 이진 탐색의 기본 아이디어는 중간값 비교이다. 즉, key값과 중간값을 비교 후 대소관계에 따라 key값의 왼쪽/오른쪽을 선택해서 탐색을 시작한다.
+        * **매 단계마다 검색해야할 부분의 크기가 반으로 줄어든다** O(logn)
+        * 반복문으로 구현이 효율적이다.
+        ```
+        int binary_search(int list[], int n, int key) {
+            int left, right, mid;
+            left = 0;
+            right = n;
+            while (left <= right) {
+                mid = (left + right) / 2;
+                if (key == list[mid]) return mid;
+                else if (key < list[mid]) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            return -1;  // 탐색 실패
+        }
+        ```
+    
+    * **색인 순차 탐색(indexed sequential search)**
+        * 주 자료 리스트(원래 리스트)에 일정 간격을 발췌해서, 인덱스라 불리는 테이블을 만든다.
+        * 인덱스 테이블에서 index[i] <= key < index[i+1] 을 만족하는 항목을 찾는다.
+            * 인덱스 테이블의 원소는 원래 테이블의 value와 index를 저장하는 두 개의 필드를 갖는 구조체.
+        * 주 자료 리스트에 해당하는 범위. (index[i].index ~ index[i+1].index)에서 순차탐색을 통해 키를 찾는다.
+        * 전체 테이블의 데이터 수가 매우 커지게 되면, 1차 인덱스 테이블을 발췌한 2차 인덱스 테이블.. 3차 인덱스 테이블 등을 추가할 수 있다.
+        * 알려진 시간복잡도는 O(m+n/m) (m:인덱스 테이블의 크기, n: 주 자료 리스트의 크기)
+ 
+    * 보간 탐색(interpolation search)
+        * 이진 탐색에 가중치를 두는, 불균등 분할 탐색 기법이다.
+        * 기본 아이디어는 정렬된 배열에서의 값과 인덱스가 비례한다고 가정하고, 비례식을 이용해 탐색할 위치를 정한다.
+        * 어떤 배열의 초기 상태가 v0 ... vk(key값) ... vn이고, 각 자리의 인덱스가 0 ... k ... n이라 할 때,
+        * 'vn - v0 : vk - v0 = n-0 : k-0' 비례식을 이용해 다음에 탐색할 위치를 결정한다.
+
+    * **이진 탐색 트리(binary search tree)**
+        * 값의 삽입과 삭제가 많이 일어날 때에는, 정렬된 배열을 이용하는 이진트리는 적합하지 않다.
+            * 정렬된 배열은 삽입과 삭제의 O(n) 시간복잡도를 갖는다. 
+        * 이진 탐색 트리는 삽입과 삭제가 비교적 빠른 시간(O(logn))안에 이뤄지기 때문에 효율적으로 값을 유지할 수 있다.
+        * 평균적인 경우 탐색과 삽입 삭제 연산 모두 O(logn)의 시간복잡도를 갖는다.
+        * 다만, **균형트리가 아닐 경우, 특히 최악의 경우 경사 트리일 경우 O(N)의 시간복잡도를 갖는다.**
+        * 따라서 **이진탐색트리에서 균형을 유지하는 것이 무엇보다 중요하다.**
+    
+    * AVL트리
+        * 노드에서 왼쪽 서브트리와 오른쪽 서브트리의 높이 차이가 1 이하인 이진탐색트리를 의미한다.
+        * AVL트리는 모든 노드의 balance factor +-1 이하인 트리이다. 
+            * 균형 인수(balance factor): 왼쪽 서브트리 높이 - 오른쪽 서브트리 높이
+        * 탐색연산 - 일반적인 이진 탐색 트리와 동일하다.
+        * AVL트리의 삽입과 삭제 연산은 균형 상태가 깨질 수 있는 연산이다.
+        * 삽입 연산
+            * 삽입 연산시에는 삽입되는 위치에서 루트까지의 경로에 있는 조상 노드들의 balance factor에 영향을 줄 수 있다.
+            * 따라서 삽입 연산 후에 불균형 상태가 된 가장 가까운 조상노드의 서브 트리들에 대해 다시 균형을 잡아야 한다.
+                * 그 외 노드들은 이레 변경할 필요가 없다. 
+            * AVL트리는 '회전'을 통해 이를 해결한다.
+        * 회전
+            * AVL트리에 삽입 연산에서 균형이 깨지는 경우는 총 4가지의 경우가 있다.
+            * 이 떄는 트리를 부분적으로 회전시켜 균형을 맞춘다.
+            1. LL: 현재 root(의미상) 왼쪽 자식의 왼쪽에 노드가 추가되면서 발생한다. 
+                * root를 기준으로 root가 parent, 왼쪽 자식이 child가 되서 '오른쪽 회전'을 수행한다.
+                ```
+                AVLNode* rotate_right(AVLNode *parent) {
+                    AVLNode *child = parent->left;
+                    // 원래 child의 오른쪽 서브트리는 parent의 왼쪽 서브트리가 된다.
+                    parent->left = child->right;    
+                    child->right = parent;
+                    return child;   // 새로운 루트를 반환
+                }
+                ```
+            2. LR: 현재 root 왼쪽 자식의 오른쪽에 노드가 추가되면서 발생한다.
+                * **root의 왼쪽 자식을 기준으로 '왼쪽 회전'**
+                * **그 후, root를 기준으로 '오른쪽 회전'을 수행한다.**
+            3. RR: 현재 root 오른쪽 자식의 오른쪽에 노드가 추가되면서 발생한다. 
+                * root를 기준으로 왼쪽 회전을 수행한다.
+            4. RL: 현재 root 오른쪽 자식의 왼쪽에 노드가 추가되면서 발생한다.
+
+        * balance factor를 구하는 함수
+            * 균형 인자(balance factor)는 왼쪽 서브트리의 높이 - 오른쪽 서브트리의 높이로 정의했다.
+            * 이는 높이를 구하는 함수 get_height()를 이용해 쉽게 구현이 가능하다.
+            * get_height()는 다음과 같이 구현한다.
+            ```
+            int get_height(AVLNode *node) {
+                int height = 0;
+                if (node != NULL) {
+                    height = 1 + max(get_height(node->left), get_height(node->right));
+                }
+                return height;
+            }
+            ```
+            * 그러면 balance factor를 구하는 get_balance() 함수는 다음과 같이 작성할 수 있다.
+            ```
+            int get_balance(AVLNode *node) {
+                if (node == NULL) return 0;
+                return get_height(node->left) - get_height(node->right);
+            }
+            ```
+            
+
