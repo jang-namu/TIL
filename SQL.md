@@ -1,5 +1,4 @@
 # SQL
-
 * 책: SQL 첫걸음 - 아사이 아츠시
 
 * DB와 DBMS
@@ -25,6 +24,10 @@
     * XML DB : XML의 형태로 태그를 이용해 마크업 문서로 작성.
     * KVS(키-밸류 스토어) : NoSQL의 등장과 함께 나옴, 열 지향 데이터베이스라고도 한다.
 
+* MySQL 클라이언트
+    * MySQL 서버에 접속해 SQL 명령을 수행하기 위한 소프트웨어
+    * use [database]의 'use'와 show databases 명령의 'show' 등은 SQL명령이 아닌 MySQL 클라이언트 프로그램의 고유명령이다!
+
 * 루프 백 접속 : PC 한 대로 클라이언트와 서버 모두 실행할 때, 클라이언트에서 서버에 접속하기 위해 네트워크를 경유해서 PC 서버로 되돌아오는 형태의 접속.
 
 * 웹 시스템과 동적 웹의 전체적인 그림을 그려보자.
@@ -35,10 +38,6 @@
     5. 생성한 콘텐츠로 클라이언트(브라우저)에게 응답(response)한다.
 
 
-
-* MySQL 클라이언트
-    * MySQL 서버에 접속해 SQL 명령을 수행하기 위한 소프트웨어
-    * use [database]의 'use'와 show databases 명령의 'show' 등은 SQL명령이 아닌 MySQL 클라이언트 프로그램의 고유명령이다!
 
 ## DB
 * DB에는 테이블 외에 다양한 데이터를 저장하거나 관리하는 여러 종류의 '데이터베이스 객체'를 만들 수 있다. (ex) 뷰(view))
@@ -63,9 +62,76 @@
         * 평상시에는 SELECT * FROM table WHERE flag <> 1; 과 같은 식으로 삭제한 것처럼 보이게 한다.
         * ex) 쇼핑사이트의 취소 주문 데이터
 
+* 데이터베이스 객체 : 데이터베이스에서 테이블, 뷰, 인덱스 등 데이터베이스 내에 실체를 가지는 모든 것.
+    * 데이터베이스 객체를 작성할 때는 이름을 지정해줘야 하는데, **이름은 겹치지 않아야 한다.**
+    * **이름은 객체의 종류와는 관계가 없어서, 뷰나 테이블끼리도 이름은 겹치지 않아야 한다.**
+* 스키마 : 데이터베이스 객체를 담는 그릇.
+    * **따라서 스키마가 다르면 데이터베이스 객체 이름이 같아도 상관없다.**, 어차피 다르다.
+    * MySQL의 CREATE DATABASE로 작성한 '데이터베이스', Oracle에서는 데이터베이스와 데이터베이스 사용자가 계층적 스키마가 된다.
+    * 테이블은 열을 정의할 수 있고, 스키마 안에는 테이블을 정의할 수 있다.
+        * 각각의 그릇 안에서는 중복되지 않도록 이름을 지정한다. 이렇게 이름이 충돌하지 않도록 하는 그릇을 네임스페이스라고 부르기도 한다.
 
+* **제약(Constraint)**
+* 테이블에 제약을 설정함으로써 저장될 데이터를 제한할 수 있다.
+    * 열 제약과 테이블 제약
+        * 열 제약 : 하나의 열에 대해 정의하는 제약.
+            * NOT NULL, UNIQUE 등..
+        * 테이블 제약 : 하나의 제약이 복수의 열에 제약을 설명.
+            * 대표적으로 **PRIMARY KEY**
+    * 제약을 정의하는 방법
+        1. 테이블 작성시 제약 정의
+        ```
+        CREATE TABLE sample (
+            a INTEGER NOT NULL,
+            b INTEGER NOT NULL UNIQUE,
+            c VARCHAR(30),
+            CONSTRAINT pkey_sample PRIMARY KEY (a, b)
+        );
+        ```
+        * 테이블을 생성하며 a와 b열에 NOT NULL 및 UNIQUE(b열) '열 제약' 정의, (a, b)로 기본키(유일성) 제약 정의
+        * **CONSTRAINT 키워드** : 제약에 이름을 붙여 관리한다.
 
-## SQL
+        2. 제약 추가
+            * 기존 테이블에 나중에 제약을 추가한다.
+            * 열 제약과 테이블 제약을 추가하는 방법이 조금 다르다.
+            1. 열 제약 : 열 정의를 변경
+                * 추가 : ALTER TABLE sample MODIFY c VARCHAR(30) NOT NULL;
+                * 삭제 : ALTER TABLE sample MODIFY c VARCHAR(30);
+            2. 테이블 제약
+                * 추가 : ALTER TABLE sample ADD CONSTRAINT pkey_sample PRIMARY KEY (a);
+                * 삭제 : 'ALTER TABLE sample DROP CONSTRAINT pkey_sample;' 또는 '~ DROP PRIMARY KEY;' (기본키 제약은 테이블에 유일)
+
+* 기본키 제약(Primary Key)
+    * primary key는 행을 구분하기 위해 속성에서 '유일'한 값을 가진다. **중복된 값을 가질 수 없다.**
+    * NULL 값을 가질 수 없으므로 기본키로 지정할 열을 NOT NULL 제약이 설정되어야 한다.
+    * **복수의 열로 기본키를 구성할 수 있다.** 지정된 열 모두 NOT NULL 제약이 설정되어야 한다.
+        * 이 경우 키를 구성하는 모든 열을 사용해서 중복하는 값이 있는지 검사한다.
+
+* 인덱스(=색인) 구조, 인덱스 또한 데이터베이스 객체 중 하나!
+    * 테이블에는 인덱스를 작성할 수 있다. 인덱스의 역할을 탐색속도의 향상!
+    * 인덱스에는 탐색 시 사용되는 키워드와 대응하는 데이터 행의 장소가 저장.
+        * 인덱스는 테이블에 의존하는 객체. 테이블을 삭제하면 대부분 인덱스도 같이 삭제된다. 
+    * **인덱스는 테이블과 별개로 독립된 데이터베이스 객체로 작성. 정렬된 상태를 유지한다. => 이진탐색**
+        * 테이블의 모든 행을 항상 정렬된 상태로 유지하기는 힘듬 => 인덱스를 분리
+        * **인덱스는 보통 이진 트리 구조로, 테이블 데이터와는 별개로 작성된다.
+    * 유일성
+        * **이진 트리는 값의 중복을 허용하지 않는다. => 테이블의 기본키는 중복을 허용하지 않는다.**
+
+* **ACID**, DB 트랜잭션이 안전하게 수행됨을 보장하기 위한 속성
+    * Atomicity, 원자성 : 기냐 아니냐. 트랜잭션의 실행이 중간에 취소되면 해당 트랜잭션은 모든 데이터베이스에 걸쳐 수행되지 않은 것이어야 하고, 그 반대에도 동일하다.
+        * 정확하게는 트랜잭션이 더 이상 분할할 수 없는 작업의 단위임을 나타내며, 이 말에 의미는 트랜잭션과 관련된 작업들이 부분적으로 실행되다 중단되지 않는 것이다.
+        * 어떤 이유로든 트랜잭션이 실행되다 실패하면, DB를 이전 상태로 롤백해서 트랜잭션 수행 전으로 되돌려서 불완전한 트랜잭션의 흔적을 남기지않아야 한다..
+    * Consistency, 일관성 : 데이터베이스에서 수행되는 모든 트랜잭션이 데이터베이스를 일관된 상태로 유지시켜야 한다.
+        * 데이터가 데이터베이스 스키마에 정의된 모든 무결성 제약 조건을 충족해야 하며, 데이터에 대한 모든 변경사항이 유효하고 의도한 변경사항을 반영해야 한다.
+    * Isolation, 고립 : 동시 트랜잭션이 시스템에 유일한 트랜잭션처럼 실행되야 한다.
+        * 각 트랜잭션은 다른 트랜잭션과 독립적으로 수행되야 한다. 
+        * 이를 위해 시스템은 각 트랜잭션이 서로 격리되도록 하는 메커니즘을 제공해야 한다.
+    * Durability, 지속성 : 트랜잭션이 일단 커밋되면 저장된 내용은 그 후로도 영구적으로 유지되어야한다.
+        * 트랜잭션이 커밋되면 데이터에 대한 변경사항은 유지되야 한다. 
+        * 즉, 어떤 후속 오류가 발생해도 유지되어야 한다.
+        * 모든 트랜잭션은 모든 로그를 남기고 커밋되어야 하고, 남긴 로그로 시스템에 장애가 발생해도 발생 전 상태로 돌아갈 수 있다.
+
+## DML
 * SQL의 '구'에는 순서가 정해져 있다. ex) 'SELECT 열 FROM 테이블명 WHERE 조건식'은 가능 => 'SELECT .. WHERE .. FROM ..' 등은 불가
 * SELECT : 데이터베이스의 데이터를 읽어오는(**참조하는**) DML 명령
     * SELECT는 '질의' 또는 '쿼리'로 불리기도 한다.
@@ -76,12 +142,14 @@
         * ex) SELECT no, name FROM sampletable; : sampletable 테이블에서 no, name 열을 가져온다.
         * 열을 지정하는 순서는 임의대로 정할 수 있다. SQL 명령의 결과는 지정한 순서대로 나온다.
             * 동일한 열을 중복으로 가져올 수도 있다..
+
     * WHERE 구 : 'WHERE [조건식]' 형태로, 행을 선택할 때 사용.
         * ex) SELECT * FROM sample21 WHERE no = 2; : no 열이 2인 행만 가져온다.
     * LIKE (술어): **패턴 매칭, 문자열의 일부분을 비교**
         * 'WHERE 열 LIKE 패턴' 형식으로 사용한다. 
         * 패턴은 매칭 대상을 지정한다. 수치형 상수는 지정할 수 없으며, 문자열로 지정한다.
         * '=' 연산자는 내용이 완전히 동일한지, LIKE는 특정 문자나 문자열이 포함되어 있는지를 본다.
+
     * ORDER BY 구 : 행을 정렬해서 결과를 가져올 때 사용.
         * 'WHERE'이 존재하면 그 뒤에, 존재하지 않으면 'FROM' 뒤에 작성한다.
         * 'ORDER BY 열' 형식으로 사용하며, 열 뒤에 DESC(descendant, 하강)를 붙이면 내림차순으로 정렬, 
@@ -91,16 +159,34 @@
         * 마찬가지로 'OREDER BY 열 [ASC/DESC], 열 [ASC/DESC]...' 형태로 여러 정렬 기준을 세울 수 있다.
         * MySQL에서 ASC는 기본값이기 때문에, 안 써도 되지만 DB에 따라 기본값이 다를 수 있다.
         * **가독성을 위해 ASC도, DESC도(당연히) 지정하자.**
-
         * **NULL 값의 정렬 순서**
             * NULL 값은 표준 SQL에도 정의되어 있지 않아, DB 제품따라 기준이 다르다.
             * **MySQL에서는 NULL 값을 가장 작은 값으로 본다.** (ASC에서 가장 먼저 나옴)
+
     * LIMIT [OFFSET] 구 : 결과 행을 제한하는데 사용.
         * 커뮤니티 게시판에 페이지가 1, 2, 3... 으로 나뉘는 것 처럼, 결과값을 제한해서 반환하는데 사용한다.
         * 'LIMIT 행수 [OFFSET 시작행]' 형식으로 사용. SELECT 명령의 **마지막에 지정한다.**
         * LIMIT 뒤 '행수'만큼의 행을 결과로 가져오고, 'OFFSET'은 'LIMIT'만큼의 행을 가져올 시작위치를 지정한다.
         * 'OFFSET' 뒤 '시작행' + 1 위치부터 가져온다. 즉, '시작행'까지를 OFF로 만들고 그 다음행부터 가져온다.
         * 이는 내부적으로 WHERE 구로 검색한 후 ORDER BY로 정렬된 뒤 최종적으로 처리된다.
+
+    * GROUP BY 구 : 열에서 같은 값을 가진 행끼리 묶어 **그룹화**한다. 집계함수의 활용 범위를 넓힌다.
+        * SELECT name, COUNT(name) FROM sample GROUP BY name;
+        * GROUP BY 구에는 그룹화할 열을 지정한다. **복수 열을 GROUP BY에 지정할 수 있다.**
+        * 집계함수로 넘겨줄 집합을 '그룹'으로 나눈다. **그룹화된 각각의 그룹이 하나의 '집합'으로 집계함수에 넘겨진다.**
+        * **GROUP BY에 지정한 열 이외의 열은 집계함수를 사용하지 않응 채 SELECT 구에 쓸 수 없다.**
+            * GROUP BY로 지정된 열은 그룹화되어 각 그룹당 하나의 값만을 가지지만, 그 외의 열들은 여러 값들 중 어떤 값을 가져와야 할지 알 수 없다!
+        * GROUP BY 사용시에도 정렬을 위해 ORDER BY를 사용할 수 있다. 아래는 자주 사용되는 패턴이다.
+            * SELECT name, COUNT(name), SUM(quantity) AS num FROM sample GROUP BY name ORDER BY num DESC;
+
+    * HAVING 구 : 그룹화한 결과에 조건식을 달아 원하는 값만을 가져올 수 있다.
+        * WHERE에 조건식에는 COUNT와 같이 그룹화가 필요한 집계함수는 지정할 수 없다. (WHERE가 GROUP BY보다 먼저 수행된다.)
+        * 대신 GROUP BY 뒤에 HAVING을 사용하면, 그룹화된 결과에 조건식을 달 수 있다.
+        * **'SELECT name, COUNT(name) FROM sample GROUP BY name HAVING COUNT(name)=1;' 는 가능**
+        * 'SELECT name, COUNT(name) FROM sample WHERE COUNT(name)=1 GROUP BY name;' 는 **불가능하다.**
+        * 즉, HAVING을 사용하면 WHERE 구와 HAVING 구에 지정된 조건으로 검색하는 2단 구조를 만들 수 있다.
+        * 반면, GROUP BY보다 나중에 수행되는 ORDER BY와 같은 경우에는 문제없이 집계함수를 사용할 수 있다.
+
 
     * 수치 연산
         * SQL은 DB 조작어이기도 하지만, 컴퓨터를 조작하는 언어이기 때문에 계산기능을 포함한다.
@@ -163,7 +249,6 @@
         * 중복 여부는 SELECT 구에 지정된 모든 열을 비교해서 판단한다.
         * 집계 함수에 인수에 수식자로 지정해서, 중복을 제거한 뒤 집계할 수 있다.
             * ex) SELECT COUNT(DISTINCT name) FROM sample;
-        
 
 * INSERT
     * 테이블에 새로운 행을 삽입(추가)한다.
@@ -187,7 +272,87 @@
     * **UPDATE sample SET no=no+1;** 다음과 같은 문장도 가능하다.
         * 물론, NULL값으로 초기화 시킬수도 있다. 'NULL 초기화'
     * MySQL은 복수 열을 동시에 갱신할 때, SET 절에 따라나오는 순서대로 처리한다.
+
+* **서브쿼리**
+    * SQL 명령문 안에 지정하는 하부 SELECT 명령. 괄호로 묶어 지정하고 주로 WHERE 절에서 많이 사용한다.
+    * 서브쿼리는 SELECT, SET, FROM 등 많은 곳에 사용이 가능하다. 다만, SELECT구에서 서브쿼리를 지정할 때엔 스칼라 서브쿼리가 필요하다.
+    * ex) DELETE FROM sample WHERE a = (SELECT MIN(a) FROM sample); **이 명령은 MySQL에서는 불가능**
+        * MySQL은 'DELETE FROM sample WHERE a = (SELECT min_a FROM (SELECT MIN(a) AS min_a FROM sample) AS temp);'로 작성
+        * **MySQL은 트랜잭션의 원자성을데이터를 추가하거나 갱신할 경우, 동일한 테이블을 서브쿼리에서 사용할 수 없도록 한다.**
+        * **위의 방법으로 에러를 발생하지 않고 인라인 뷰로 임시 테이블을 만들어 처리한다**
+        * 'AS temp'는 테이블에 별명을 붙인다. **MySQL의 모든 파생 table은 별명을 가져야한다**
     
+    * 서브쿼리의 반환 패턴
+        1. **스칼라 값**(하나의 값을 반환하는 패턴)
+            * 서브쿼리로 사용하기 쉬워서 중요시된다.
+            * 스칼라 값을 반환하도록 SELECT 명령을 쓰기 위해선, SELECT 구에서 단일 열을 선택해야 한다.
+            * 여러 열을 선택할 경우 3번 또는 4번과 같은 열이 복수인 패턴이 되어버리기 때문
+        2. 복수의 행이지만 열은 하나인 패턴
+        3. 하나의 행이지만 열이 복수인 패턴
+        4. 복수의 행, 복수의 열이 반환되는 패턴
+    
+    * SELECT 구에서 서브쿼리
+        * 열을 지정하므로, **SELECT 구의 서브쿼리는 스칼라 값을 반환해야한다.**
+        * SELECT (SELECT COUNT(*) FROM sample51)AS sq1, (SELECT COUNT(*) FROM sample52) AS sq2;
+
+    * SET 구에서 서브쿼리
+        * **SET 구에서도 서브쿼리를 사용할 떼, 스칼라 값을 반환해야 한다.**
+        * UPDATE sample SET a = (SELECT max_a FROM (SELECT MAX(a) AS max_A FROM) AS temp);
+
+    * FROM 구에서 서브쿼리
+        * FROM 구에는 테이블 이외에도 서브쿼리를 사용할 수 있따.
+        * **FROM 구에서는 서브쿼리가 스칼라 값을 반환하지 않아도 된다.**
+        * SELECT * FROM (SELECT * FROM sample) AS sq;
+            * **nested(내포, 중첩) 구조** : SELECT 명령 안에 SELECT 명령이 들어있는 것 같이 보인다. 
+
+    * INSERT 명령과 서브쿼리
+        * 두 가지 방법
+            1. VALUES 구의 일부로 서브쿼리 사용
+                * 스칼라 서브쿼리여야 한다. 해당 열의 값을 서브쿼리의 반환값으로 지정한다.
+                * INSERT INTO sample VALUES ((SELECT COUNT(*) FROM sample51), (SELECT COUNT(*) FROM sample52));
+            2. VALUES 구 대신 SELECT 명령을 사용
+                * SELECT 명령은 꼭 스칼라 서브쿼리일 필요는 없다. **SELECT 명령의 결과를 INSERT INTO 테이블에 전부 추가한다.**
+                * **서브쿼리가 반환하는 열 수와 자료형이 INSERT 할 테이블과 일치하기만 하면 된다.**
+                * 주로 데이터의 복사나 이동을 위해 사용된다.
+                * INSERT INTO sample51 SELECT * FROM sample52; (이 때, sample51과 sample52의 열 구성이 같아야 한다.)
+
+* 상관 서브쿼리
+    * 하위쿼리의 자체 쿼리에 대한 매개변수 또는 조건으로 상위쿼리의 열을 하나 이상 사용한다면, 이를 연관되어 있다고 한다.
+    * 즉, 상관 서브쿼리는 내부쿼리가 외부쿼리에 따라 결과가 달라지는 서브쿼리를 의미한다.
+    * **상관 서브쿼리의 내부쿼리는 외부쿼리의 각 행에 대해 매번 실행된다.**
+
+    * EXISTS (술어) : 서브쿼리가 반환하는 결과값이 있는지를 조사한다.
+        * 무엇이든 반환된 행이 있으면 참, 없으면 거짓을 반환한다.
+        * ex) 검색할 때 데이터가 존재하는지 아닌지를 판별하기 위해 사용
+        ```
+        UPDATE sample1 
+        SET a = '있음' 
+        WHERE EXISTS (
+            SELECT * 
+            FROM sample2 
+            WHERE sample2.no = sample1.no 
+        );
+        ```
+        * sample2 테이블에 no과 일치하는 sample1 테이블 행의 a 값을 '있음'으로 갱신한다.
+        * 무엇인가 반환되는 행이 존재하지 않는 상태를 찾기 위해서는 'NOT EXISTS'를 사용한다.
+    
+    * IN (술어) : 집합(오른쪽)안의 값(왼쪽, 하나의 열 지정)이 존재하는지 조사한다.
+        * 'SELECT * FROM sample WHERE no IN (3, 5);' == 'SELECT * FROM sample WHERE no=3 or no=5;'
+        * **집합 부분을 서브쿼리로 바꿔도 된다. 물론, 복수의 열을 반환해서는 안 된다.**
+            * SELECT * FROM sample1 WHERE no IN (SELECT no2 FROM sample2);
+        * 'NOT IN'으로 포함되어 있지 않은 경우를 조사할 수 있다.
+        * **집합에 NULL이 포함된 경우, 'IN'과 'NOT IN'은 왼쪽 값이 포함되있지 않으면 NULL을 반환한다.**
+            * 포함된 경우에는 원래대로 참/거짓을 반환한다.
+        * **비교하는 열 값이 NULL인 경우 그 결과는 NULL이 된다.**
+
+* 클라이언트 변수
+    * 변수에 미리 값을 저장해놓고 추후에 사용이 가능하다.
+    * MySQL
+    ```
+    set @a = (SELECT MIN(a) FROM sample);
+    DELETE FROM sample WHERE a = @a;
+    ```
+    * 다만, DELETE 또는 테이블 갱신을 수행하고 나서, sample테이블의 a열의 최소값이 바뀐다고 해도, @a 변수의 저장된 값은 바뀌지 않는다.
 
 * CASE 문
     * CASE문은 주로 간단하게 데이터를 변환하는데 사용한다.
@@ -217,6 +382,7 @@
             ELSE '미지정'
         END AS "성별" FROM sample;
         ```
+        
 * COALESCE()
     * COALESCE() 함수를 사용하면 NULL값을 더 쉽게 변환할 수 있다.
     * 여러 개의 인수를 지정할 수 있다. 주어진 인수 가운데 NULL이 아닌 값에 대해서는 가장 먼저 지정된 인수의 값을 반환한다.
@@ -287,3 +453,46 @@
     * CURRENT_DATE : 현재 날짜를 YYYY-MM-DD 형식으로 반환한다.
     * INTERVAL 1 DAY : interval은 기간형 데이터로 날짜형 데이터와 덧셈 및 뺄셈을 할 수 있다.
     * DATE_DIFF(end, start) : 종료날짜와 시작날짜 간의 차이를(start-end) 일 단위로 반환한다.
+
+
+## DDL
+* Data Definition Language, DDL은 데이터를 정의하는 명령으로, 스키마 내의 객체를 관리할 때 사용한다.
+* 테이블의 작성, 삭제, 변경
+    * DDL은 모둑 같은 문법을 사용한다. CREATE로 작성, DROP으로 삭제, ALTER로 변경
+    * CREATE : 객체를 작성한다. CREATE TABLE, CREATE VIEW 등..  
+        * SYNTAX
+        ```
+        CREATE TABLE table_name (
+            no INTERGER [DEFAULT '리터럴'] [NULL / NOT NULL],
+            열 정의2,
+            열 정의3,
+        );
+        ```
+        * 열 정의 : 열명, 자료형, [DEFAULT '리터럴'] [NULL/NOT NULL] [UNIQUE] ...
+            * 그 뒤로 여러 제약 조건을 걸 수 있다. DEFAULT는 생략하면 자동으로 NULL이 들어간다.
+            * **NOT NULL 제약조건을 명시하지 않을 경우, 기본적으로 NULL 허용으로 생성된다.**
+            * **기본키(primary key)로 설정할 열은 NOT NULL 제약이 선행되어야 한다.**
+            * 자료형으로 CHAR나 VARCHAR를 지정할 때에는 꼭 최대길이를 함께 지정한다. ex) VARCHAR(20)
+
+    * DROP : 테이블을 삭제한다. '테이블 삭제 시, 따로 확인하지 않고 수행되니 주의!'
+        * DELETE는 데이터의 행 단위 삭제, 만일 테이블을 삭제하지 않고 모든 레코드만을 삭제하고 싶다. 
+        * => 'TRUNCATE TABLE 테이블명' : 행 단위로 내부처리가 일어나는 DELETE (WHERE를 지정하지 않은) 보다 빠르다. DDL
+
+    * ALTER : 테이블을 작성한 뒤, 추후에 테이블의 열 구성을 변경할 수 있다.
+        * ADD : 테이블의 열 및 제약(constraint)을 추가한다.
+            * 기존 데이터행이 존재하면 추가한 열의 값이 모두 기본값(미지정 시, NULL)이 된다.
+            * **NOT NULL 제약을 붙여 열을 추가하려면, 먼저 NOT NULL로 제약을 건 뒤 NULL 이외의 기본값을 지정**
+            * ALTER TABLE 테이블명 ADD 열 정의
+                * ALTER TABLE sample ADD new_col VARCHAR(20) DEFAULT '' NOT NULL;
+            * **새로운 열을 추가할 경우, 기존 시스템에서 변경된 테이블에 INSERT 하는 명령을 확인해야 함.**
+            
+        * MODIFY : 테이블의 열 속성을 수정한다.
+            * 기존 데이터 행이 존재하는 경우, 속성 변경에 따라 데이터도 변환된다. (변환 과정에서 오류시 미실행)
+            * ALTER TABLE sample MODIFY col VARCHAR(20);
+
+        * CHANGE : 테이블의 열 이름과 동시에 열 정의를 수정한다.
+            * 열 이름을 변경할 때 사용한다. 열 이름을 제외한 열의 속성을 변경시에는 대부분 MODIFY를 사용한다.
+            * ATLER TABLE sample CHANGE col new_col INTERGER NOT NULL;
+
+        * DROP : 테이블의 열 및 제약을 삭제한다.
+            * ALTER TABLE sample DROP col;
