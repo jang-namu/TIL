@@ -15,5 +15,5 @@
   * [Http 완벽 가이드](https://github.com/jang-namu/TIL/blob/main/CS/Web.md)
 
 ## 언어
-* [SQL] (https://github.com/jang-namu/TIL/blob/main/SQL.md)
+* [SQL](https://github.com/jang-namu/TIL/blob/main/SQL.md)
 * [Python](https://github.com/jang-namu/TIL/blob/main/%ED%8C%8C%EC%9D%B4%EC%8D%AC.md)
