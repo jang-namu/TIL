@@ -17,6 +17,89 @@
     * [다차원 배열과 메모리](https://stackoverflow.com/questions/15339296/does-order-in-a-declaration-of-multidimensional-array-have-an-influence-on-used/15339442#15339442)
     * [공간 지역성](https://eli.thegreenplace.net/2015/memory-layout-of-multi-dimensional-arrays)
 
+
+## Scanner, java.util.Scanner
+* Scanner는 System.in 객체를 받아 바이트단위로 들어오는 입력을, 토큰 단위로 만들어 반환한다.
+    * Scanner scanner = new Scanner(System.in); // 의존성 주입??
+    * **프로그램 내에서 System.in은 하나를 공유해서 사용한다. 즉, Scanner 또한 하나의 객체만 생성하고 공유함이 바람직하다.**
+    * nextLine()은 '\n'이 나올때까지 입력을 받는다.
+    * next(), nextInt(), nextDouble().... 들은 토큰 단위로 즉, '\n', '\t', ' '과 같은 공백문자를 기준으로 끊는다.
+    * **nextLine()은 엔터키가 입력되면 "" 빈 문자열을, next()는 엔터키가 입력되도 문자열이나 숫자 등 다른 키의 입력을 기다린다. next()는 절대 빈 문자열을 반환하지 않는다.**
+    * hasNext()는 현재 입력된 토큰이 있으면 true, 아니면 입력이 들어올 때 까지 대기하고 true를 리턴. ctrl+z가 입력되면 false를 리턴한다.
+    * Scanner는 사용 후 반드시 close() 해준다.
+
+
+## 예외처리, Exception
+* 실행시간 오류와 예외의 차이점: 예외는 잡아서(catch) 적절한 방법으로 대응(handling) 가능, 실행시간 오류는 논리적 오류인 경우가 많다.(무한 재귀호출 등..)
+* Java에서 예외처리는 try-catch-finally를 이용한다. finally는 생략 가능하다.
+    ```
+    try {
+        예외가 발생할 수 있는 부분
+    } catch (처리할 예외 타입 선언) {
+        예외 처리 부분
+    } finally {
+        예외 발생 여부와 상관없이 무조건 실행되는 문장
+    }
+    ```
+* try 블록 내에서 예외가 발생하면, 자바 플랫폼은 catch문에 '처리할 예외 타입선언'부에 객체를 만들어 전달한다.
+    * 객체에는 예외에 대한 정보가 담겨있다.
+* 자주 사용되는 Exception (대부분은 java.lang 패키지에 포함)
+    * ArithmeticException: 정수를 0으로 나눌 때
+    * NullPointerException: null 레퍼런스를 참조하려 할 때
+    * ClassCastException: 변환할 수 없는 타입으로 객체를 변환하려 할 때
+    * OutOfMemoryException: 메모리가 부족할 때
+    * ArrayIndexOutOfBounds: 배열의 범위를 벗어났을 때
+    * IllegalArgumentException: 잘못된 인자 전달 시
+    * IOException: 입출력 동작 실패 또는 인터럽트 발생 시   **java.io**
+    * NumberFormatException: 문자열이 나타내는 숫자와 다른 타입의 숫자로 변환 시 발생
+    * InputMismatchException: Scanner 클래스의 nextInt()로 정수입력을 기다릴 때, 사용자가 문자를 입력하는 것과 같이 타입이 맞지않는 입력이 들어올 때    **java.util**
+
+
+
+## Switch
+* Switch는 여러 조건 분기를 작성할 때, if 대신 사용하여 가독성을 높여준다.
+    * Java의 Switch-case는 'break;'를 명시적으로 작성해야 한다. 그렇지 않으면 다음 case문의 '실행문장'을 계속해서 실행한다.
+        * case를 검사하지 않고 왜 실행문장을 계속 실행하는지는, switch의 구조를 보면 알 수 있다.
+        * c, c++ 등에서 switch는 레이블과 goto로 구현된다. 
+        * <img src="./rsc/switch.png>">
+    * Java의 Switch는 **정수, 문자, 문자열**이 가능하다. case문에는 **정수, 문자, 문자열의 '리터럴'**만이 올 수 있다.
+
+## Array, 배열
+* 배열은 같은 타입의 변수들의 집합으로 볼 수 있다.
+    * Java의 배열은 1. 레퍼런스 변수 선언 2. 배열 할당 두 단계로 생성한다.
+    * 레퍼런스 변수는 배열의 주소 값을 가질 뿐, 배열 그 자체는 아니다.
+    * Java의 배열은 객체로서, 배열의 크기를 저장하는 length필드를 갖는다. 
+    * 또한, Java의 배열은 음수 인덱싱을 지원하지 않는다.
+    * Java에서 for문을 이용하여 배열이나, enum 타입의 원소를 순차적으로 접근할 수 있다. 이를 for-each문 이라 한다.
+    ```
+    for (int k : intArr) {
+        ;
+    }
+    ```
+    * 다차원 배열과 비정방형 배열
+    * Java의 다차원 배열(2차원 배열을 기준으로)의 구성.
+        * int intArr[][] = new int[2][3];   // 2차원 배열에서 행의 각 원소는 1차원 배열에 대한 레퍼런스가 된다.
+        * <img src="./rsc/multiDimensionedArray.png">
+    ```
+    int intArr[][] = new int[2][3];     // 2행 3열의 배열 생성.
+
+    int intArr2[][] = new int[2][];     // 0번째 행은 2열, 첫번째 행은 4열까지 존재하는 비정방향 배열
+    intArr2[0] = new int[2];
+    intArr2[1] = new int[4];
+    ```
+
+* 배열을 반환하는 메서드
+    * Java에서 메서드가 배열을 반환할 때, 공간 전체가 아니라 레퍼런스 변수만이 반환된다.
+    * **아래 메서드에서 temp가 가리키는 힙 공간은 메서드가 종료되도 사라지지 않는다.**
+    ```
+    public int[] makeArr() {
+        int temp[] = new int[4];
+        return temp;    // 지역변수 temp는 소멸한다.
+    }
+    ```
+         
+
+
 # String, StringBuffer, StringBuilder
 * 면접을 보다가 내가 잘 모르고 있는 부분이라 정리한다. StringBuffer, StringBuilder는 입, 출력 단계에서 밖에 잘 안 써봤는데..
 * String, StringBuffer, StringBuilder 모두 문자열을 다루는 클래스다. Java는 왜 문자열을 다루는 클래스를 여러 개로 나눠놨을까?
