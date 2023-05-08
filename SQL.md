@@ -333,6 +333,12 @@
             ) AS `avg(null=0)`
             FROM table;
             ```
+            * IFNULL : NULL 값을 다른 값으로 대치하여 연산 또는 출력할 수 있다.
+                * IFNULL(속성, 값) : 속성 값이 NULL이면 '값'으로 대치한다.
+            ```
+            SELECT name '이름', IFNULL(phone, '연락처 없음') '전화번호'
+            FROM User;
+            ```
         * MAX(), MIN() : 집합에서 최대/최소를 구한다. 수치형, 문자열형, 날짜시간형에도 사용 가능하다. NULL은 무시한다.
     
     * DISTINCT/ALL : SELECT 구에서 DISTINCT는 집합 안에 중복된 값을 제거하고 ALL은 전부 반환한다.
@@ -368,7 +374,7 @@
     * 서브쿼리는 SELECT, SET, FROM 등 많은 곳에 사용이 가능하다. 다만, SELECT구에서 서브쿼리를 지정할 때엔 스칼라 서브쿼리가 필요하다.
     * ex) DELETE FROM sample WHERE a = (SELECT MIN(a) FROM sample); **이 명령은 MySQL에서는 불가능**
         * MySQL은 'DELETE FROM sample WHERE a = (SELECT min_a FROM (SELECT MIN(a) AS min_a FROM sample) AS temp);'로 작성
-        * **MySQL은 트랜잭션의 원자성을데이터를 추가하거나 갱신할 경우, 동일한 테이블을 서브쿼리에서 사용할 수 없도록 한다.**
+        * **MySQL은 트랜잭션 원자성을 위해 데이터를 추가하거나 갱신할 경우, 동일한 테이블을 서브쿼리에서 사용할 수 없도록 한다.**
         * **위의 방법으로 에러를 발생하지 않고 인라인 뷰로 임시 테이블을 만들어 처리한다**
         * 'AS temp'는 테이블에 별명을 붙인다. **MySQL의 모든 파생 table은 별명을 가져야한다**
     
@@ -465,7 +471,7 @@
         * 검색 CASE는 WHEN 절에 '조건식', 단순 CASE는 '식'을 지정한다.
         * 사용 예
         ```
-        SELEC a,
+        SELECT a,
         CASE a
             WHEN 1 THEN '남자'
             WHEN 2 THEN '여자'
