@@ -224,6 +224,9 @@
         sub.SuperMember;
         sub.subMember;
         // super.subMember  // 컴파일 오류, Super 클래스의 레퍼런스 super로는 Sub클래스의 멤버를 찾을 수 없다. (심볼릭 에러)
+
+        // if, sub class의 메서드를 한번만 실행할 목적이라면 변수에 저장할 필요가 없다.
+        ((Super) sub).subMethod();
         ```
         * 다운캐스팅은 왜 필요할까?
             * 앞서 업캐스팅을 통해, 여러 클래스의 객체들을 간단히 다루도록 하였다.
