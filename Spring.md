@@ -88,3 +88,29 @@ public class HelloController {
 * 생성되는 build 디렉토리 안에 libs 디렉토리에서 'hello-spring-0.0.1-SNAPSHOT.jar'의 예시와 같이 생성되는 jar파일을 실행하 면된다.
 * java -jar hello-spring-0.0.1-SNAPSHOT.jar를 통해 실행. '^ + c' 키로 종료(mac)
 
+
+## Builder 패턴과 ResponseEntity.
+* 스프링 부트를 공부하다 ResponseEntity를 만났다. 
+* 최근에는 클래스 범위에 @RestController 어노테이션을 추가하면, @ResponseEntity를 일일히 추가해주지 않아도 되지만
+* 마침 책에 예제가 있었고, 아래와 같은 코드가 어떻게 ResponseEntity 객체를 만들어 반환할 수 있는지 궁금했다.
+![ResponseEntity를 반환하는 PUT 메서드](image.png)
+
+* 처음에는 ResponseEntity가 Bean으로 관리되는 싱글톤 패턴의 인스턴스인 줄 알았다. 
+* 이렇게 잘 못 이해한 이유는 위 사진에서 객체를 생성할 때, 'new' 키워드가 안 보였기 때문이다.
+
+* 그런데 보다보니 익숙한 문장 형식이, 그게 아니였음을 깨닫게 했다. 얼마 전 본 builder 패턴과 객체 생성방식이 같다.
+* ResponseEntity는 HttpEntity를 상속받는다. HttpEntity는 HttpHeaders와 bodt 필드를 갖는다.
+* 이를 상속한 ResponseEntity는 status 필드를 갖는데, 이는 우리가 보는 HTTP 응답의 그 상태값과 같은 것이다.
+![HttpEntity](image-1.png)
+![ResponseEntity](image-2.png)
+
+* ResponseEntity에 status는 static 메서드이다. status는 static nested class인 DefaultBuilder의 객체를 생성하여 반환한다.
+![status](image-4.png)
+
+* DefaultBuilder는 다음과 같이 중첩 클래스로 작성되며, HttpHeaders 필드를 갖는다. 또한, Header에 값을 설정하는 메서드를 포함한다.
+![DefaultBuilder](image-5.png)
+
+* body() 메서드는 최종적으로 ResponseEntity의 생성자를 호출한다.
+![body](image-6.png)
+![호출되는 생성자](image-7.png)
+* 위와 같은 방법으로 ResponseEntity 객체가 생성된다.
