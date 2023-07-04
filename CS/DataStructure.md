@@ -38,7 +38,7 @@
 * Tail recursion의 경우, 함수가 순환호출을 할 때 자기가 맡은 일을 끝내고 다음 함수를 호출한다. return에 더 이상의 계산식이 없이 함수호출 부분만이 존재한다.
 
     * Head Recursion
-    ```
+    ```c
     function recsum(x) {
         if (x === 0) {
             return 0;
@@ -49,7 +49,7 @@
     ```
 
     * Tail Recursion
-    ```
+    ```c
     function tailrecsum(x, running_total = 0) {
      if (x === 0) {
          return running_total;
@@ -73,7 +73,7 @@
 
 * 구조체(structure)
 * 타입이 다른 데이터를 묶는 방법, 일반적으로 struct 키워드 이용
-    ```
+    ```c
     struct 구조체태그 {
          항목1; 
          항목2;
@@ -81,7 +81,7 @@
     ```   
 * typedef 구조체 정의
     * 아래 예에서는 student가 새로운 데이터 타입의 이름이 된다.
-        ```
+        ```c
         typedef struct studentTag {
              char name[10];
              int age;
@@ -111,7 +111,7 @@
         * 'int matric[rows][columns]'과 같이 선언한다.
     * 두번째 방법 : 값이 0이 아닌 위치만 포함하는 구조체 배열을 포함하는 구조체로 만든다.
         * 구조체 배열은 다음과 같은 모습이다.
-        ```
+        ```c
         typedef struct {
             int row;
             int column;
@@ -119,7 +119,7 @@
         } element;
         ```
         * 위에 element배열을 요소로 갖는 matrix 구조체를 만든다.
-        ```
+        ```c
         typedef struct matrix {
             element data[MAX_TERMS];
             int rows;
@@ -131,7 +131,7 @@
 
 * 포인터 : 주소를 갖는 변수
 * 모든 변수는 메모리 공간에 저장되며, 메모리의 각 바이트에는 주소가 매겨져있다.
-    ```
+    ```c
     int a = 100;
     int *p;
     p = &a;
@@ -159,7 +159,7 @@
 * 프로그램 작성 당시에는 입력의 크기를 알 수 없는 경우가 많다. 이에따라 발생하는 문제들을 해결하기 위해 C언어에서는
 * 필요한만큼의 메모리를 운영체제로부터 할당받아 사용하고, 사용이 끝나면 시스템에 반납하는 기능이 있다. 이를 동적 메모리 할당이라고 한다.
 * **동적 메모리는 메모리공간 중 '힙(heap)영역'에 할당된다.** 힙은 운영체가자 사용되지 않는 메모리 공간을 모아놓은 공간이다.
-    ```
+    ```c
     int *p;
     p = (int *)malloc(sizeof(int));     # 동적 메모리 할당
     *p = 1000;          # 동적 메모리 사용
@@ -172,7 +172,7 @@
     5. **malloc은 메모리를 할당할 수 없으면 NULL을 반환한다. 따라서 malloc()의 반환값은 항상 NULL검사를 해야한다.**
     
     * 정수 10개를 저장할 수 있는 동적메모리 할당
-    ```
+    ```c
     #define SIZE 10
     int *p;
     p = (int *)malloc(SIZE * sizeof(int));
@@ -212,7 +212,7 @@
 * 스택 구현
     * 복잡한 데이터를 저장하기 위해, **구조체 element를 갖는 스택을 기본으로 한다.**
     * C에서 모든 자료구조는 다음과 같이 구조체로 정의하고, 이를 위한 연산에는 구조체의 포인터를 인자로 전달한다.
-        ```
+        ```c
         typedef struct {
             element data[MAX_STACK_SIZE];
             int top;
@@ -224,7 +224,7 @@
     * 동적 배열 스택
         * 위는 정적 배열, 컴파일 시간에 크기가 결정되고 이를 위해선 배열의 최대크기를 미리 알아야한다.
         * C에서는 malloc()을 이용해 동적으로 메모리를 할당받을 수 있다. realloc()은 현재 내용은 유지하면서 주어진 크기로 동적메모리를 다시 할당한다.
-        ```
+        ```c
         typedef struct {
             element *data;
             int capacity;       // 스택의 용량
@@ -273,7 +273,7 @@
         * 따라서 front == rear는 공백상태이며 front가 rear보다 하나 앞에 있으면 포화상태가 된다. 
         * 요소의 개수를 카운팅하는 count변수를 추가로 만들어 한자리를 비우지 않게 구현할 수도 있다.
     * **배열을 원형으로 회전시키기 위해, 모듈로(modulo)연산을 이용한다.**
-        ```
+        ```c
         void enqueue(QueueType *q, element item) {
             if (is_full(q)) {
                 fprintf(stderr, "큐가 가득참");
@@ -292,7 +292,7 @@
     * 덱은 원형큐와 비슷해서 좀만 확장하면 쉽게 구현이 가능하다.
         * 원형큐에서 delete_rear(), add_front(), get_rear()의 연산을 추가한다.
         * front에서 추가, rear에서 삭제가 일어날 때, 각각 front와 rear를 감소시켜야 한다. 음수가 되는 경우 MAX_SIZE만큼 더 해줘야한다.
-        ```
+        ```c
         void add_front(DequeType *q, element val) {
             // 포화상태이면...
             q->data[q->front] = val;
@@ -359,7 +359,7 @@
         * '**자기 참조 구조체**'를 이용한다. => 자기 자신을 참조하는 포인터를 포함하는 구조체.
         * element 타입의 데이터 필드와 포인터가 저장되는 링크 필드로 정의
         * link 필드는 ListNode를 가리키는 포인터로 정의, 다음 노드의 주소를 저장한다.
-        ```
+        ```c
         typedef int element;
         typedef struct {
             element data;
@@ -369,19 +369,19 @@
     * 노드의 생성
         * 연결 리스트의 모든 데이터의 접근하기 위해, 헤드 포인터가 필요하다.
         * 노드가 없는 단순 연결리스트는 다음과 같이 생성한다.
-            ```
+            ```c
             ListNode *head = NULL;
             ```
         * 즉, 리스트의 공백검사는 헤드 포인터가 NULL인지 확인한다.
         * 연결리스트는 필요할 때마다 노드를 동적 할당하여 생성한다. 
-            ```
+            ```c
             head = (ListNode *)malloc(sizeof(ListNode));
             head->data =10; // 노드에 데이터를 저장한다.
             head->link = NULL;
             ```
     * 노드의 연결
         * 노드의 연결은 간단하게, 새로운 노드를 동적으로 생성 및 데이터를 저장하고 이전 노드의 링크에 생성한 노드의 주소를 넣는다.
-            ```
+            ```c
             ListNode *p; 
             p = (ListNode *)malloc(sizeof(ListNode));
             p->data = 20;
@@ -399,7 +399,7 @@
 
     * 다항식 : 연결 리스트 응용
         * 단순 연결 리스트로 다항식을 표현하려면, 계수, 지수, 링크로 필드가 세개인 구조체 노드를 선언한다.
-            ```
+            ```c
             typedef struct ListNode {
                 int coef:
                 int expon;
@@ -421,7 +421,7 @@
         * 많은 경우 연결 리스트의 노드의 갯수를 세는 size 변수도 같이 구현한다.
         * 헤더 노드를 이용하면 연결 리스트의 마지막에 노드를 추가할 때, 여러 편리함이 있다.
         * 헤더 노드를 ListType이라는 구조체로 만들어 사용한다.
-            ```
+            ```c
             typedef struct ListType {
                 int size;
                 ListNode *head;
@@ -429,7 +429,7 @@
             } ListType;
             ```
         * 헤더노드를 운용하기 위해선, 헤더 노드를 동적으로 생성하고 초기화해야한다.
-            ```
+            ```c
             ListType* create() {
                 ListType *plist = (ListType *)malloc(sizeof(ListType));
                 plist->size = 0;
@@ -460,7 +460,7 @@
     * 이중 연결 리스트에서 포인터 p가 임의의 노드라고 할 때, p = p->llink->rlink = p->rlink->llink의 관계가 항상 성립한다.
     * 헤드 노드는 포인터 변수가 아닌, 구조체 변수이다. 이중 연결 리스트를 사용하기 전에 반드시 초기화 해야 한다.
     * 구현
-        ```
+        ```c
         typedef int element;
         typedef struct DListNode {  // 이중 연결 노드 타입
             element data;
@@ -470,7 +470,7 @@
         ```
     * 연산
         1. 삽입 연산
-            ```
+            ```c
             void dinsert(DListNode *before, element data) {
                 DListNode *newnode = (DListNode *)malloc(sizeof(DListNode));
                 newnode->data = data;
@@ -481,7 +481,7 @@
             }
             ```
         2. 삭제 연산
-            ```
+            ```c
             void ddelete(DListNode *head, DListNode *removed) {
                 if (head == removed) return;
                 removed->llink->rlink = removed->rlink;
@@ -496,7 +496,7 @@
     * 연결된 스택은 단순 연결 리스트로 충분히 구현 가능하다. **top을 정수가 아닌 노드를 가리키는 포인터로 선언**
     * 공백 상태는 top 포인터가 NULL인 경우.
     * 구현
-        ```
+        ```c
         typedef struct StackNode {
             element data;
             struct StackNode *link;
@@ -508,7 +508,7 @@
         ```
     * 연산
         1. push()
-            ```
+            ```c
             void push(LinkedStackType *s, element item) {
                 StackNode *newnode = (StackNode *)malloc(sizeof(StackNode));
                 newnode->data = item;
@@ -517,7 +517,7 @@
             }
             ```
         2. pop()
-            ```
+            ```c
             element pop(LinkedStackType *s) {
                 if (is_empty(s)) {
                     fprintf(stderr, "스택이 비어있음\n");
@@ -536,7 +536,7 @@
     * 단순 연결 리스트에 2개의 포인터를 추가, front와 rear가 처음과 끝 노드를 가리킨다.
     * front는 삭제 연산과, rear는 삽입 연산과 관련이 있다. 공백 상태의 경우 front와 rear는 NULL이 된다.
     * 구현
-        ```
+        ```c
         typedef struct QueueNode {
             element data;
             struct QueueNode *link;
@@ -548,7 +548,7 @@
         ```
     * 연산
         1. enqueue()
-            ``` 
+            ``` c
             void enqueue(LinkedQueueType *s, element data) {
                 QueueNode *newnode = (QueueNode *)malloc(sizeof(QueueNode));
                 newnode->data = data;
@@ -561,7 +561,7 @@
             }
             ```
         2. dequeue()
-            ```
+            ```c
             element dequeu(LinkedQueueType *s) {
                 if (is_empty(s)) {
                     frpintf(stderr, "큐가 비어있습니다.\n");
@@ -620,7 +620,7 @@
     * 링크 표현법
         * 트리의 노드가 구조체로 표현되고, 각 노드가 왼쪽, 오른쪽 자식을 가리키는 두 개의 포인터를 갖는다.
         * 구현
-            ```
+            ```c
             typedef struct TreeNode {
                 element data;
                 struct TreeNode *left, *right;
@@ -646,7 +646,7 @@
             2. 왼쪽 서브트리 방문
             3. 오른쪽 서브트리 방문
         * 전위 순회 스도코드
-            ```
+            ```c
             preoreder(x):
             if x != NULL:
                 then print(DATA(x));
@@ -656,7 +656,7 @@
     * **중위 순회(inorder traversal)**
         * 왼쪽 서브트리, 루트, 오른쪽 서브트리 순으로 방문한다.
         * 중위 순회 스도코드
-            ```
+            ```c
             inoreder(x):
             if x != NULL:
                 then inorder(LEFT(x));
@@ -666,7 +666,7 @@
         * 즉, 전위, 중위 그리고 뒤에 나올 후위 순회 알고리즘까지 호출의 순서만 다르다.
     * **후위 순회(postorder traversal)**
         * 왼쪽 서브트리, 오른쪽 서브트리, 루트 순으로 방문한다.
-            ```
+            ```c
             void postorder(TreeNode *root) {
                 if (root != NULL) {
                     postorder(root->left);
@@ -686,7 +686,7 @@
         * 레벨 순회는 큐 자료구조를 사용한다. bfs와 같다.
         * 먼저 큐에 있는 노드를 꺼내어 방문한 다음, 그 노드의 자식 노드를 큐에 삽입하는 과정을 큐가 빈 상태가 될 때까지 반복한다.
         * 구현
-        ```
+        ```c
         void level_order(TreeNode *root) {
             QueueType q;
             init_queue(&q);
@@ -718,7 +718,7 @@
 
 * 이진트리의 추가 연산
     * 노드의 개수
-        ```
+        ```c
         int get_node_count(TreeNode *root) {
             int count = 0;
             if (root != NULL)
@@ -728,7 +728,7 @@
         ```
     
     * 단말 노드 개수
-        ```
+        ```c
         int get_leaf_node(TreeNode *root) {
             int count = 0;                
             if (root != NULL) {
@@ -743,7 +743,7 @@
         ```
 
     * 높이 구하기
-        ```
+        ```c
         int get_height(TreeNode *root) {
             int height = 0;
             if (root != NULL) {
@@ -763,7 +763,7 @@
     * 이로써 각 노드들은 중위 순회의 순서대로 연결되고, 순회를 스택을 쓰지않고 효율적으로 처리할 수 있다.
     * 다만, 이 경우 NULL 링크에 스레드가 저장되면, 링크에 저장된게 자식을 가리키는 포인터인지, NULL값 대신 스레드가 저장되있는지 구별해주는 태그 필드가 필요하다.
     * 구현
-        ```
+        ```c
         typedef struct TreeNode {
             int data;
             struct TreeNode *left, *right;
@@ -771,7 +771,7 @@
         } TreeNode;
         ```
     * 연산
-        ```
+        ```c
         TreeNode* find_successor(TreeNode *p) {
             TreeNode *q = p->right;
             if (q == NULL || p->is_thread == TRUE) {
@@ -807,7 +807,7 @@
     * 탐색연산
         * 이진 탐색 트리에서 특정한 키값을 가진 노드를 찾기 위해서는, 먼저 주언진 탐색키 값과 루트 노드의 키값을 비교한다.
         * 같으면 탐색 성공. 탐색키가 작으면 왼쪽, 크면 오른쪽 서브트리로 가서 다시 탐색을 실행한다.
-        ```
+        ```c
         // 순환적 탐색연산
         TreeNode* search(TreeNode *root, int key) {
             if (root == NULL) return NULL;
@@ -837,7 +837,7 @@
         * 이진 탐색 트리에서 키 값을 고유한 값이어야 한다. 즉 탐색과정에서 같은 키 값을 찾았다면 새로 추가하지 않고 return한다.
         * 트리에 같은 키 값이 존재하지 않을 시에는 탐색을 실패한 위치가, 새로운 노드를 삽입하는 위치가 된다.
         * 새로운 노드는 항상 단말노드에 추가된다. 즉, 단말노드를 발견할 때까지 루트에서 키를 검색하고 발견되면 새로운 노드가 단말 노드의 하위 노드로 추가된다.
-        ```
+        ```c
         TreeNode* insert_node(TreeNode *node, int key) {
             if (node == NULL) {
                 TreeNode *temp = (TreeNode *)malloc(sizeof(TreeNode));
@@ -866,7 +866,7 @@
         * 셋째, 양쪽 서브트리 존재. - 후계자 노드를 정해, 값만 바꾸고 다시 서브트리에서 사용된 후계자 노드를 삭제한다.
             * 후계자 노드는 왼쪽 서브트리의 오른쪽 끝과, 오른쪽 서브트리의 왼쪽 끝(두 값이 삭제할 루트 노드와 가장 가까움)를 사용할 수 있다.
             * 일반적으로 오른쪽 서브트리의 후계자 노드를 사용한다.
-        ```
+        ```c
         TreeNode* delete_node(TreeNode *root, int key) {
             if (root == NULL) return root;
             
@@ -900,13 +900,13 @@
     * 응용
         1. 이진탐색트리에서 가장 큰 값을 찾을 수 있으면, 우선순위 큐를 구현할 수 있다.
             * 가장 큰 값은 트리 상 가장 오른쪽에 요소이다. 즉
-            ```
+            ```c
             while (root->right != NULL) 
                 root = root->right;
             ```
         2. 이진 탐색 트리를 중위 순회하면, 오름차순으로 정렬된 숫자를 얻을 수 있다. 내림차순으로 정렬하는 방법은?
             * 중위순회 LVR을 반대로 RVL로 진행한다.
-            ```
+            ```c
             void inorder_traversal(TreeNode *root) {
                 if (root != NULL) {
                     inorder_traversal(root->right);
@@ -942,7 +942,7 @@
         * 일반 트리와 마찬가지로 0번 인덱스는 쓰지 않는다.
         * 물론 왼쪽 자식 = 부모*2, 오른 자식 = 부모*2 + 1, 부모노드 = 자식//2가 그대로 성립한다.
         * 힙의 정의
-        ```
+        ```c
         #define MAX_ELEMENT 200
         typedef struct {
             int key;
@@ -1030,7 +1030,7 @@
             * 두 정점 사이 간선이 존재하는지 빠르게 확인 가능하다.
             * 다만, 희소 그래프의 경우 메모리 낭비가 심하고, 전체 간선을 돌아보기 위해 O(N^2) 시간이 소요된다.
             * 구현
-            ```
+            ```c
             typedef struct GrpahType {
                 int num_vertices;
                 int matrix[MAX_VERTICES][MAX_VERTICES];
@@ -1042,7 +1042,7 @@
             * 두 정점 사이 간선이 존재하는지 확인하기 위해선 정점 차수만큼의 시간이 필요하다.
             * 전체 간선을 돌아보기 위해 O(n+m) 시간이 걸린다.
             * 구현
-            ```
+            ```c
             typedef struct GraphNode {
                 int vertex;
                 struct GrpahNode *link;
@@ -1059,7 +1059,7 @@
             * 시작 정점에서 출발하여 연결된 정점으로 이동한 후, 이동한 정점을 시작 정점으로 아직 방문하지 않은 정점에 대해 다시 DFS를 시작한다.
             * visited 배열을 이용해 방문한 노드를 관리하고, 새로 정해진 시작 정점에서 더 이상 갈 곳이 없는 경우, 종료하고 돌아와서 이전 시작 정점의 탐색을 계속한다.
             * 즉, DFS는 순환적인 형태를 가지고 있으며 흔히 순환적 방법 또는 스택을 이용해 구현한다.
-            ```
+            ```c
             // 순환적인 방법
             void dfs(GraphType *graph, int *visited, int start) {
                 visited[start] = 1;
@@ -1097,7 +1097,7 @@
             * 이를 구현하기 위해 선입선출 할 수 있는 큐(Queue) 자료구조를 사용한다.
             * 알고리즘은 큐가 소진될 때 까지, 큐에서 정점을 꺼내서 방문하고 인접 정점들을 큐에 추가한다. 
             * 구현
-            ```
+            ```c
             void bfs(GrpahType *graph, int start) {
                 int *visited = (int *)calloc(graph->num_vertices, sizeof(int));
                 visited[start] = 1;
@@ -1149,7 +1149,7 @@
             * 동시에 size 배열을 만들어 각 컴포넌트 요소의 수를 저장하고 union 연산 시, 적은 집합을 큰 집합에 붙이는 식으로 구현한다.
             * 위와 같은 방법으로 구현하면 트리의 최대 레벨이 logn이 되므로 find 연산 시 어떤 값에서도 logn 시간에 대표값을 찾을 수 있다.
             * find, union 연산은 다음과 같이 구현된다.
-            ```
+            ```c
             int find(int *link, int x) {
                 if (link[x] == -1) return x;
                 while (link[x] != -1) { // 비어있는 경우 -1이라 하면,
@@ -1172,7 +1172,7 @@
             ```
             * **경로 압축**
             * 만약 find 함수를 다음과 같이 작성하면, find와 union이 상수항과 비슷한 시간에 작동한다.
-            ```
+            ```c
             int find(int *link, int x) {
                 if (x == link[x]) return x;
                 return link[x] = find(link[x]);
@@ -1210,7 +1210,7 @@
     * **음수 사이클을 찾기 위해선 기존 n-1번의 라운드를 진행 후, 1번의 라운드를 더 실행한다.**
     * 즉, n번째 라운드에서도 줄어드는 경로가 존대한다면, 해당 그래프는 음수 사이클을 포함한다.
     * **벨만-포드는 '음수 간선'을 포함하는 최단 경로도** 또한 찾을 수 있다.
-    ```
+    ```c
     // edges에 간선 리스트로, 모든 간선 정보(a, b, w)가 포함되어 있다고 하자.
     int distance[MAX_VERTICES] = { INF, };
     distnace[start] = 0;
@@ -1243,7 +1243,7 @@
         2. 다른 경로로는 또 다른 제2, 제3의 노드를 경유해 돌아오는 경로가 있는데, 
         3. 우선순위큐에서 뺸 이 노드는 아직 추가되지 않은 노드 중 '가장 가까운' 경로를 가진 노드이므로
         4. 다른 곳을 경유해서 오면, 오히려 더 먼 경로가 된다.
-    ```
+    ```c
     //dijkstra algorithm by python
     distance = [INF] * (N+1)    // 거리 정보
     visited = [False] * (N+1)   // processed, 처리되었는지를 저장
@@ -1268,7 +1268,7 @@
     * 플로이드-워셜은 모든 간선에서 다른 모든 간선으로의 최단 경로를 한 번에 구한다.
     * n x n 행렬을 사용하고, 인접행렬의 값은 간선의 가중치를 나타내며, 간선이 존재하지 않을 경우 무한대로 초기화한다.
     * 기본적인 아이디어는, 매 번 라운드마다 중간 경로를 바꿔가며 최단경로를 업데이트 하는 것이다.
-    ```
+    ```c
     for (int k=1; k <= n; k++) {             // 중간 노드
         for (int i=1; i <= n; i++) {         // 시작 노드
             for (int j=1; j <= n; j++) {     // 도착 노드
@@ -1312,7 +1312,7 @@
         * 장점 : 이동연산의 횟수가 미리 결정 된다. 제자리 정렬(in-place sorting)
         * 단점 : 이동 횟수가 큼. **안정성 x**
             * 안정성을 만족하지 않는 예
-            ```
+            ```c
             B, b, a, c      (a < b < c, b=B일때)
             결과는 a, b, B, c가 된다.
             ```
@@ -1362,7 +1362,7 @@
             * pivot을 선택하는 방법으론 가장 간단하게 왼쪽 원소를 선택할 수도 있고
             * 일반적으로는 왼쪽 오른쪽 중 간 3개의 데이터 중 중간 값을 선택하는 median of three를 많이 쓴다.
         * 구현
-        ```
+        ```c
         int partition(int list[], int left, int right) {
             int row, high, temp;
             int pivot = list[left];
@@ -1464,7 +1464,7 @@
         * 이진 탐색의 기본 아이디어는 중간값 비교이다. 즉, key값과 중간값을 비교 후 대소관계에 따라 key값의 왼쪽/오른쪽을 선택해서 탐색을 시작한다.
         * **매 단계마다 검색해야할 부분의 크기가 반으로 줄어든다** O(logn)
         * 반복문으로 구현이 효율적이다.
-        ```
+        ```c
         int binary_search(int list[], int n, int key) {
             int left, right, mid;
             left = 0;
@@ -1520,7 +1520,7 @@
             * 이 떄는 트리를 부분적으로 회전시켜 균형을 맞춘다.
             1. LL: 현재 root(의미상) 왼쪽 자식의 왼쪽에 노드가 추가되면서 발생한다. 
                 * root를 기준으로 root가 parent, 왼쪽 자식이 child가 되서 '오른쪽 회전'을 수행한다.
-                ```
+                ```c
                 AVLNode* rotate_right(AVLNode *parent) {
                     AVLNode *child = parent->left;
                     // 원래 child의 오른쪽 서브트리는 parent의 왼쪽 서브트리가 된다.
@@ -1540,7 +1540,7 @@
             * 균형 인자(balance factor)는 왼쪽 서브트리의 높이 - 오른쪽 서브트리의 높이로 정의했다.
             * 이는 높이를 구하는 함수 get_height()를 이용해 쉽게 구현이 가능하다.
             * get_height()는 다음과 같이 구현한다.
-            ```
+            ```c
             int get_height(AVLNode *node) {
                 int height = 0;
                 if (node != NULL) {
@@ -1550,7 +1550,7 @@
             }
             ```
             * 그러면 balance factor를 구하는 get_balance() 함수는 다음과 같이 작성할 수 있다.
-            ```
+            ```c
             int get_balance(AVLNode *node) {
                 if (node == NULL) return 0;
                 return get_height(node->left) - get_height(node->right);
@@ -1589,7 +1589,7 @@
             * 2-3트리의 탐색연산은 이진탐색트리에 탐색연산에 3-노드를 추가하면 된다.
             * 즉 TreeNode 구조체에 자신이 2-노드인지, 3-노드인지를 저장하는 type 필드를 추가하고,
             * 이를 통해 비교하여 아래와 같이 구현할 수 있다.
-            ```
+            ```c
             int search(TreeNode *node, int key) {
                 if (node == NULL) return False;
                 else if (node->key1 == key) return True;
@@ -1704,7 +1704,7 @@
                         2. 아스키 코드 범위는 65~122로 정해져 있기 때문에, 세 글자로 이루어진 키는 195~366으로 해시코드가 집중된다.
             * 방법.2 **아스키 코드 값에, 글자의 위치에 기반한 값을 곱한다**
                 * 양의 정수 g에 대하여 (일반적으로 g = 31)
-                ```
+                ```c
                     int hash_function(char *key) {
                         int hash_index = 0;
                         while (*key) {
@@ -1720,7 +1720,7 @@
         * 선형 조사법 (linear probing): 해시 테이블(ht)를 순차탐색, ht[k]에서 충돌 발생 시, ht[k+1]이 비어있는지 확인.
             * 만약 테이블의 끝에 도달하면 다시 테이블의 처음으로 간다. 원래자리로 돌아오면 테이블이 가득 찬 상테임을 알 수 있다.
             * 문제점: 군집화(clustering), 한 번 충돌이 시작되면 그 위치에 항목들이 집중되는 현상.
-        * 이차 조사법 (quadratic probing): 다음 조사할 위치를 ht[k], ht[k] + 1*1, ht[k] + 2*2, ht[k] + 3*3...
+        * 이차 조사법 (quadratic probing): 다음 조사할 위치를 ht[k], ht[k] + 1 * 1, ht[k] + 2 * 2, ht[k] + 3 * 3...
             * 모든 위치를 조사하게 만들려면, **테이블 크기는 소수여야 한다.**
         * 이중 해싱 (double hashing): 오버플로우가 발생한 후 다음 저장할 위치를 정할 때, 별개의 해시 함수를 사용.
             * 일반적인 형태의 이차 해싱함수 step = C - (k mod C) , C는 보통 M(테이블 크기)보다 약간 작은 소수

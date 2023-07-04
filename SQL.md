@@ -94,7 +94,7 @@
             * 대표적으로 **PRIMARY KEY**
     * 제약을 정의하는 방법
         1. 테이블 작성시 제약 정의
-        ```
+        ```sql
         CREATE TABLE sample (
             a INTEGER NOT NULL,
             b INTEGER NOT NULL UNIQUE,
@@ -324,7 +324,7 @@
         * SUM() : 합계를 구한다. 마찬가지로 NULL은 무시한다. **수치형만 사용 가능하다.**
         * AVG() : 평균을 구한다. 마찬가지로 NULL은 무시한다. **수치형만 사용 가능하다.**
             * if NULL을 0으로 치고 평균을 내고싶다. => case문 사용 가능
-            ```
+            ```sql
             SELECT COUNT(
                 CASE
                 WHEN quantity IS NULL THEN 0
@@ -335,7 +335,7 @@
             ```
             * IFNULL : NULL 값을 다른 값으로 대치하여 연산 또는 출력할 수 있다.
                 * IFNULL(속성, 값) : 속성 값이 NULL이면 '값'으로 대치한다.
-            ```
+            ```sql
             SELECT name '이름', IFNULL(phone, '연락처 없음') '전화번호'
             FROM User;
             ```
@@ -420,7 +420,7 @@
     * EXISTS (술어) : 서브쿼리가 반환하는 결과값이 있는지를 조사한다.
         * 무엇이든 반환된 행이 있으면 참, 없으면 거짓을 반환한다.
         * ex) 검색할 때 데이터가 존재하는지 아닌지를 판별하기 위해 사용
-        ```
+        ```sql
         UPDATE sample1 
         SET a = '있음' 
         WHERE EXISTS (
@@ -444,7 +444,7 @@
 * 클라이언트 변수
     * 변수에 미리 값을 저장해놓고 추후에 사용이 가능하다.
     * MySQL
-    ```
+    ```sql
     set @a = (SELECT MIN(a) FROM sample);
     DELETE FROM sample WHERE a = @a;
     ```
@@ -461,7 +461,7 @@
         * 모든 조건식에 걸리지 않은 경우 ELSE 절에 식으로 반영되고, **ELSE를 절을 생략할 경우 ELSE NULL로 간주된다.**
         * 따라서 ELSE는 생략하지 않는 것이 좋다.
         * 사용 예
-        ```
+        ```sql
         // sample 테이블에서 a열과, NULL 값을 0으로 바꾼 a(null=0)열을 가져온다.
         SELECT a, CASE WHEN a IS NULL THEN 0 ELSE a END AS `a(null=0)` FROM sample;
         ```
@@ -470,7 +470,7 @@
         * CASE의 식1과 같은 WHEN 절을 찾는다. (switch-case와 동일)
         * 검색 CASE는 WHEN 절에 '조건식', 단순 CASE는 '식'을 지정한다.
         * 사용 예
-        ```
+        ```sql
         SELECT a,
         CASE a
             WHEN 1 THEN '남자'
@@ -482,7 +482,7 @@
 * COALESCE()
     * COALESCE() 함수를 사용하면 NULL값을 더 쉽게 변환할 수 있다.
     * 여러 개의 인수를 지정할 수 있다. 주어진 인수 가운데 NULL이 아닌 값에 대해서는 가장 먼저 지정된 인수의 값을 반환한다.
-    ```
+    ```sql
     // 위의 검색 CASE 쿼리와 같은 결과를 보여준다.
     SELECT a, COALESCE(a, 0) FROM sample
     ```
@@ -494,7 +494,7 @@
         * 기본적으로 합집합은 중복되는 데이터는 한개로 나타낸다.
         * **두 개의 SELECT 명령을 하나로 연계해 질의 결과를 얻을 수 있다.**
         * 사용 예
-        ```
+        ```sql
         SELECT * FROM sample1
         UNION
         SELECT * FROM sample2;
@@ -502,7 +502,7 @@
         * **이 때, sample1과 sample2의 열 구성(열의 갯수, 자료형)이 같아야 한다.**
         * UNION에서의 정렬 (ORDER BY)
             * UNION 결과를 정렬해서 반환하려면 **지정할 열에 같은 별명을 붙이고, 가장 마지막 SELECT 명령에서 ORDER BY를 지정한다.**
-            ```
+            ```sql
             SELECT a AS c FROM sample1
             UNION
             SELECT b AS c FROM sample2 ORDER BY c;
@@ -581,7 +581,7 @@
     * 교차 결합(CROSS JOIN)
         * 관계형 모델에서 카티전곱과 같다. 대전표 형식으로 모든 행에 대한 쌍을 만든다.
         * 내부 결합과 외부 결합은 교차 결합에 결합 조건을 지정하여 검색하는 방법이다.
-        ```
+        ```sql
         SELECT * FROM table1, table2;
         -- 또는
         SELECT *
@@ -589,7 +589,7 @@
         ```
     * 내부 결합(INNER JOIN)
         * CROSS JOIN에서 '원하는 조합'(결합 조건)만 검색하는 것을 말한다.
-        ```
+        ```sql
         -- 구식 방법
         SELECT * FROM table1, table2 WHERE table1.col1 = table2.col1;
         -- 이렇게 쓰자!
@@ -600,7 +600,7 @@
         * 테이블 사이에는 INNER JOIN 키워드, ON 키워드 뒤로 <결합 조건>을 명시한다.
             * 추가적으로 WHERE, ORDER BY 등 ~ 붙여서 사용한다.
         * 실 사용 예, **FROM 절에서 각 테이블에 alias를 붙여 사용한다. (내부적으로 FROM이 가장 먼저 처리된다.)
-        ```
+        ```sql
         SELECT S.상품명, M.메이커명
         FROM 상품2 S INNER JOIN 메이커 M
         ON S.메이커코드 = M.메이커코드;
@@ -608,7 +608,7 @@
         * 자기 결합(SELF JOIN) 
             * 특별히 명령어는 지정되어 있지 않음. 자기 자신에 별명을 붙여 'INNER JOIN'을 사용한다.
             * 자기 자신의 기본키를 참조하는 열을 가지는 구조에서 자주 사용
-            ```
+            ```sql
             SELECT S1.상품명, S2.상품명
             FROM 상품 S1 INNER JOIN 상품 S2
             ON S1.상품코드 = S2.상품코드;
@@ -619,7 +619,7 @@
         * LEFT JOIN 
             * 좌측 테이블에는 존재하고 우측 테이블에는 존재하지 않는 행.
             * 존재하지 않는 값을 NULL로 하여 강제적으로 표시한다.
-            ```
+            ```sql
             SELECT S.상품명, M.메이커명
             FROM 상품2 S LEFT JOIN 메이커 M
             ON S.메이커코드 = M.메이커코드;
@@ -634,7 +634,7 @@
     * DDL은 모둑 같은 문법을 사용한다. CREATE로 작성, DROP으로 삭제, ALTER로 변경
     * CREATE : 객체를 작성한다. CREATE TABLE, CREATE VIEW 등..  
         * SYNTAX
-        ```
+        ```sql
         CREATE TABLE table_name (
             no INTERGER [DEFAULT '리터럴'] [NULL / NOT NULL],
             열 정의2,
