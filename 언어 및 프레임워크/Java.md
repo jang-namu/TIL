@@ -32,7 +32,7 @@
 ## 예외처리, Exception
 * 실행시간 오류와 예외의 차이점: 예외는 잡아서(catch) 적절한 방법으로 대응(handling) 가능, 실행시간 오류는 논리적 오류인 경우가 많다.(무한 재귀호출 등..)
 * Java에서 예외처리는 try-catch-finally를 이용한다. finally는 생략 가능하다.
-    ```
+    ```java
     try {
         예외가 발생할 수 있는 부분
     } catch (처리할 예외 타입 선언) {
@@ -61,7 +61,7 @@
     * Java의 Switch-case는 'break;'를 명시적으로 작성해야 한다. 그렇지 않으면 다음 case문의 '실행문장'을 계속해서 실행한다.
         * case를 검사하지 않고 왜 실행문장을 계속 실행하는지는, switch의 구조를 보면 알 수 있다.
         * c, c++ 등에서 switch는 레이블과 goto로 구현된다. 
-        * <img src="./rsc/switch.png>">
+        * <img src="../rsc/img/Java/switch.png">
     * Java의 Switch는 **정수, 문자, 문자열**이 가능하다. case문에는 **정수, 문자, 문자열의 '리터럴'**만이 올 수 있다.
 
 ## Array, 배열
@@ -71,7 +71,7 @@
     * Java의 배열은 객체로서, 배열의 크기를 저장하는 length필드를 갖는다. 
     * 또한, Java의 배열은 음수 인덱싱을 지원하지 않는다.
     * Java에서 for문을 이용하여 배열이나, enum 타입의 원소를 순차적으로 접근할 수 있다. 이를 for-each문 이라 한다.
-    ```
+    ```java
     for (int k : intArr) {
         ;
     }
@@ -79,8 +79,8 @@
     * 다차원 배열과 비정방형 배열
     * Java의 다차원 배열(2차원 배열을 기준으로)의 구성.
         * int intArr[][] = new int[2][3];   // 2차원 배열에서 행의 각 원소는 1차원 배열에 대한 레퍼런스가 된다.
-        * <img src="./rsc/multiDimensionedArray.png">
-    ```
+        * <img src="../rsc/img/Java/multiDimensionedArray.png">
+    ```java
     int intArr[][] = new int[2][3];     // 2행 3열의 배열 생성.
 
     int intArr2[][] = new int[2][];     // 0번째 행은 2열, 첫번째 행은 4열까지 존재하는 비정방향 배열
@@ -91,7 +91,7 @@
 * 배열을 반환하는 메서드
     * Java에서 메서드가 배열을 반환할 때, 공간 전체가 아니라 레퍼런스 변수만이 반환된다.
     * **아래 메서드에서 temp가 가리키는 힙 공간은 메서드가 종료되도 사라지지 않는다.**
-    ```
+    ```java
     public int[] makeArr() {
         int temp[] = new int[4];
         return temp;    // 지역변수 temp는 소멸한다.
@@ -114,7 +114,7 @@
     * this() 메서드는 **생성자 내에서 다른 생성자를 호출할 때 사용한다.**
         * **this()는 반드시 생성자의 첫 문장에 사용되어야 한다.**
     * 다음과 같이 작성할 수 있다.
-    ```
+    ```java
     public Class Book {
         String name;
         String title;
@@ -201,7 +201,7 @@
     * **업캐스팅, upcasting**
         * 업캐스팅은 서브 클래스의 객체에 대한 레퍼런스를 슈퍼 클래스 타입으로 변환하는 것.
         * 즉, super class의 레퍼런스 변수가 sub class의 인스턴스를 가리키도록 치환되는 것을 말한다.
-        ```
+        ```java
         Person p = new Student();   // Student 클래스가 Person 클래스를 상속받은 sub class라고 할 때,
         // 업캐스팅은 명시적으로 타입변환하지 않아도, 자동으로 변환된다.
         ```
@@ -216,7 +216,7 @@
         * 다운캐스팅은 업캐스팅의 정반대이다. 즉, super class 객체에 대한 레퍼런스를 sub class 타입으로 치환한다.
         * 즉, super class의 인스턴스를 sub class의 레퍼런스가 가리키도록 치환한다.
         * 이렇게 치환된 super class의 인스턴스는 sub class의 레퍼런스를 통해 sub class의 멤버에 접근 가능하다.
-        ```
+        ```java
         Super super = new Super();
         Sub sub;
         sub = (Sub)super;   // 다운캐스팅
@@ -240,7 +240,7 @@
     * **'instance of' 연산자**
         * '레퍼런스 instance of 클래스명'으로 사용. 레퍼런스가 가리키는 객체가 해당 클래스 타입의 객체이면 true, 아니면 false가 나오는 '이항 연산자'이다.
         * 클래스에만 적용되며, primtive 타입에는 사용할 수 없다.
-        ```
+        ```java
         /*
             Person클래스를 상속하는 Student, Researcher 클래스
             Researcher 클래스를 상속하는 Professor 클래스.
